@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
@@ -19,12 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Filters\V1\ActionFilters\" />
     <Folder Include="Filters\V1\OperationFilters\" />
     <Folder Include="Authority\" />
     <Folder Include="Models\Validations\" />
     <Folder Include="Utility\Attributes\" />
-    <Folder Include="Utility\MappingProfiles\" />
   </ItemGroup>
 
 </Project>

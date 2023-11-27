@@ -1,5 +1,9 @@
-﻿using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
+﻿using AutoMapper;
+using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.ProductActionFilters;
 using CannabisPlantations.WebApi.Models;
+using CannabisPlantations.WebApi.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CannabisPlantations.WebApi.Controllers.V1
@@ -10,19 +14,45 @@ namespace CannabisPlantations.WebApi.Controllers.V1
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> GetAll() 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ProductDto>> GetAll() 
         {
-            return Ok(_unitOfWork.ProductRepo.GetAll());
+            IEnumerable<ProductDto> productDtos = _mapper.Map<IEnumerable<ProductDto>>(_unitOfWork.ProductRepo.GetAll());
+            return Ok(productDtos);
         }
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Product>> Get([FromRoute] int id) 
+        [HttpGet("{productId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(ProductExistFilterAttribute))]
+        public ActionResult<ProductDto> Get([FromRoute] int productId) 
         {
-            return Ok(await _unitOfWork.ProductRepo.GetAsync(p => p.Id == id));
+            ProductDto productDto = _mapper.Map<ProductDto>(HttpContext.Items["product"]);
+            return Ok(productDto);
+        }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> Create([FromBody] ProductCreateDto productDto, [FromQuery] int cannabisTypeId, [FromQuery] int agronomistId) 
+        {
+            Product product = new Product
+            {
+                Price = productDto.Price,
+                CannabisTypeId = cannabisTypeId,
+                AgronomistId = agronomistId
+            };
+            await _unitOfWork.ProductRepo.InsertAsync(product);
+            await _unitOfWork.Save();
+            return CreatedAtAction(nameof(Get), new {productId = product.Id});
         }
     }
 }

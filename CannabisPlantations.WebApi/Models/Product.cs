@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CannabisPlantations.WebApi.Models;
 
 public partial class Product
 {
     public int Id { get; set; }
-
     public int CannabisTypeId { get; set; }
-
     public int AgronomistId { get; set; }
-
     public int? Price { get; set; }
 
     public virtual Agronomist Agronomist { get; set; } = null!;
