@@ -22,7 +22,6 @@
     <Folder Include="Filters\V1\ActionFilters\" />
     <Folder Include="Filters\V1\OperationFilters\" />
     <Folder Include="Authority\" />
-    <Folder Include="Models\Dtos\" />
     <Folder Include="Models\Validations\" />
     <Folder Include="Utility\Attributes\" />
     <Folder Include="Utility\MappingProfiles\" />

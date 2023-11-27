@@ -1,4 +1,6 @@
 using CannabisPlantations.WebApi.Data;
+using CannabisPlantations.WebApi.Data.Repositories;
+using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
 using CannabisPlantations.WebApi.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Kiril")));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -20,6 +23,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Finlandia", Version = "40%", Description = StaticDetails.SwaggerDescription });
 });
+
 
 WebApplication app = builder.Build();
 

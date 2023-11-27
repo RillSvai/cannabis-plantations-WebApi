@@ -30,7 +30,7 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             _dbSet.RemoveRange(entities);
         }
 
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "", Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
+        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "")
         {
             IQueryable<TEntity> query = _dbSet;
             if (filter is not null) 
@@ -40,10 +40,6 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             foreach (string includeProperty in includeProperties.Split(',',StringSplitOptions.RemoveEmptyEntries)) 
             {
                 query = query.Include(includeProperty);
-            }
-            if (orderBy is not null) 
-            {
-                return orderBy(query);
             }
             return query;
         }
