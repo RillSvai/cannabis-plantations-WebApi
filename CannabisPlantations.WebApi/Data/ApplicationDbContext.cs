@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using CannabisPlantations.WebApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -59,7 +60,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.Name, "UQ__Agronomi__737584F63DC65F9E").IsUnique();
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
 
             entity.HasMany(d => d.BusinessTrips).WithMany(p => p.Agronomists)
@@ -85,7 +86,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Applicat__3214EC07EFBF25C1");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
         });
 
@@ -108,7 +109,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Business__3214EC07B94F5A1B");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
         });
@@ -119,7 +120,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.Name, "UQ__Cannabis__737584F6527CBB50").IsUnique();
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
         });
 
@@ -129,7 +130,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.Name, "UQ__Customer__737584F6EF9194F2").IsUnique();
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
 
             entity.HasMany(d => d.Tastings).WithMany(p => p.Customers)
@@ -157,7 +158,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("Feedback");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Date).HasColumnType("datetime");
             entity.Property(e => e.Text).HasMaxLength(255);
 
@@ -173,7 +174,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("Harvest");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Date).HasColumnType("datetime");
 
             entity.HasOne(d => d.Agronomist).WithMany(p => p.Harvests)
@@ -193,7 +194,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.CustomerId, "idx_CustomerId");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Date).HasColumnType("datetime");
 
             entity.HasOne(d => d.Agronomist).WithMany(p => p.Orders)
@@ -226,9 +227,8 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Products__3214EC075B649FFA");
 
-            entity.HasIndex(e => e.CannabisTypeId, "UQ__Products__115623557941556F").IsUnique();
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
+          
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.Agronomist).WithMany(p => p.Products)
                 .HasForeignKey(d => d.AgronomistId)
@@ -240,7 +240,6 @@ public partial class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Products__Cannab__52593CB8");
         });
-
         modelBuilder.Entity<ProductStorage>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__ProductS__3214EC07177E5FEF");
@@ -249,7 +248,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.ProductId, "UQ__ProductS__B40CC6CC9825AA36").IsUnique();
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.Product).WithOne(p => p.ProductStorage)
                 .HasForeignKey<ProductStorage>(d => d.ProductId)
@@ -263,7 +262,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.CustomerId, "idx_CustomerId");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Date).HasColumnType("datetime");
 
             entity.HasOne(d => d.Agronomist).WithMany(p => p.Returns)
@@ -298,7 +297,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.Name, "UQ__Scopes__737584F68222FCAD").IsUnique();
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(30);
 
             entity.HasMany(d => d.ApplicationCredentials).WithMany(p => p.Scopes)
@@ -326,7 +325,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasIndex(e => e.AgronomistId, "idx_AgronomistId");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Date).HasColumnType("datetime");
 
             entity.HasOne(d => d.Agronomist).WithMany(p => p.Tastings)

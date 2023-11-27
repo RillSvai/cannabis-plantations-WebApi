@@ -42,7 +42,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Create([FromBody] ProductCreateDto productDto, [FromQuery] int cannabisTypeId, [FromQuery] int agronomistId) 
+        public async Task<ActionResult<ProductDto>> Create([FromBody] ProductCreateDto productDto, [FromQuery] int cannabisTypeId, [FromQuery] int agronomistId) 
         {
             Product product = new Product
             {
@@ -52,7 +52,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             };
             await _unitOfWork.ProductRepo.InsertAsync(product);
             await _unitOfWork.Save();
-            return CreatedAtAction(nameof(Get), new {productId = product.Id});
+            return CreatedAtAction(nameof(Get), new { productId = product.Id }, _mapper.Map<ProductDto>(product));
         }
     }
 }
