@@ -1,15 +1,35 @@
+using CannabisPlantations.WebApi.Data;
+using CannabisPlantations.WebApi.Utility;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Kiril")));
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = ApiVersion.Default;
+    options.ReportApiVersions = true;
+});
+builder.Services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'V");
+builder.Services.AddSwaggerGen(options => 
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Finlandia", Version = "40%", Description = StaticDetails.SwaggerDescription });
+});
 
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => 
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "CannabisPlantations WebApi v1");
+    });
 }
 
 app.UseHttpsRedirection();
