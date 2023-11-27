@@ -1,0 +1,6 @@
+@CannabisPlantations.WebApi_HostAddress = http://localhost:5111
+
+GET {{CannabisPlantations.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
