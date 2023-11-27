@@ -9,8 +9,14 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         {
             _db = db;
             ProductRepo = new ProductRepository(db);
+            CannabisTypeRepo = new CannabisTypeRepository(db);
+            AgronomistRepo = new AgronomistRepository(db);
         }
         public IProductRepository ProductRepo { get; }
+
+        public ICannabisTypeRepository CannabisTypeRepo { get; }
+
+        public IAgronomistRepository AgronomistRepo {get; }
 
         public async Task Save()
         {

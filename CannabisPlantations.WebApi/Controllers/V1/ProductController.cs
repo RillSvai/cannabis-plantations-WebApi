@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.AgronomistActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CannabisTypeActionFilters;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.ProductActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
@@ -42,6 +44,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [IdFilter]
+        [TypeFilter(typeof(CannabisTypeExistFilterAttribute))]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
         public async Task<ActionResult<ProductDto>> Create([FromBody] ProductCreateDto productDto, [FromQuery] int cannabisTypeId, [FromQuery] int agronomistId) 
         {
             Product product = new Product
