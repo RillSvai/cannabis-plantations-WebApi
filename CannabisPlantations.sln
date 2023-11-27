@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannabisPlantations.WebApi", "CannabisPlantations.WebApi\CannabisPlantations.WebApi.csproj", "{0F42706C-5205-46B4-B8CD-41E1ED32766B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CannabisPlantations.WebApi", "CannabisPlantations.WebApi\CannabisPlantations.WebApi.csproj", "{0F42706C-5205-46B4-B8CD-41E1ED32766B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannabisPlantations.Tests", "CannabisPlantations.Tests\CannabisPlantations.Tests.csproj", "{D7CBEA45-D59F-4DEF-9D44-0C4C5EC06632}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{0F42706C-5205-46B4-B8CD-41E1ED32766B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F42706C-5205-46B4-B8CD-41E1ED32766B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F42706C-5205-46B4-B8CD-41E1ED32766B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7CBEA45-D59F-4DEF-9D44-0C4C5EC06632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7CBEA45-D59F-4DEF-9D44-0C4C5EC06632}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7CBEA45-D59F-4DEF-9D44-0C4C5EC06632}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7CBEA45-D59F-4DEF-9D44-0C4C5EC06632}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
