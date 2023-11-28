@@ -8,7 +8,11 @@ namespace CannabisPlantations.WebApi.Utility
     {
         public MappingProfiles()
         {
-            CreateMap<Product,ProductDto>().ReverseMap();
+            CreateMap<Product,ProductDto>();
+
+            CreateMap<Customer,CustomerDto>(); 
+
+            CreateMap<Agronomist,AgronomistDto>();  
         }
     }
 }

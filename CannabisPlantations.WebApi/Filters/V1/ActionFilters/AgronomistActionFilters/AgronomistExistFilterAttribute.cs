@@ -26,6 +26,7 @@ namespace CannabisPlantations.WebApi.Filters.V1.ActionFilters.AgronomistActionFi
                 context.Result = new NotFoundObjectResult(details);
                 return;
             }
+            context.HttpContext.Items["agronomist"] = agronomist;
             await next();
         }
 

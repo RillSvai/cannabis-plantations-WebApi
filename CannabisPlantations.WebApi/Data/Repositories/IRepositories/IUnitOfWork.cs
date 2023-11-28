@@ -5,6 +5,7 @@
         IProductRepository ProductRepo { get; }
         ICannabisTypeRepository CannabisTypeRepo { get; }
         IAgronomistRepository AgronomistRepo { get; }
+        ICustomerRepository CustomerRepo { get; }
         Task Save();
     }
 }

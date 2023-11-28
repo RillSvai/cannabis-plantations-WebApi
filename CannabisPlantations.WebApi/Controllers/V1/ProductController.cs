@@ -80,8 +80,6 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
-        // async Task
-        // async Task<sometype>
         //[HttpDelete("{productId:int}")]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
         //[ProducesResponseType(StatusCodes.Status204NoContent)]

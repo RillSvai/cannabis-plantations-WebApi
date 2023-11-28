@@ -8,6 +8,7 @@ public partial class Agronomist
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
+    public bool IsAvailable { get; set; } 
 
     public ICollection<Harvest> Harvests { get; set; } = new List<Harvest>();
 

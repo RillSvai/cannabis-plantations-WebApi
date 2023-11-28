@@ -37,7 +37,9 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
+        modelBuilder.Entity<Agronomist>()
+        .Property(e => e.IsAvailable)
+        .HasDefaultValue(true);
     }
 
 }
