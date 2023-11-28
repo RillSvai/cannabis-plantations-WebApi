@@ -30,10 +30,6 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<ProductStorage> ProductStorage { get; set; }
     public DbSet<Return> Returns { get; set; }
     public DbSet<ReturnDetail> ReturnDetails { get; set; }
-    public DbSet<Application> Applications { get; set;}
-    public DbSet<ApplicationCredential> ApplicationCredentials { get; set;} 
-    public DbSet<Scope> Scopes { get; set;}
-    public DbSet<ApplicationCredentialScopes> ApplicationCredentialScopes { get; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
