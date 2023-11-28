@@ -46,7 +46,7 @@ namespace CannabisPlantations.WebApi.Data.Repositories
 
         public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "", bool isTracked = false)
         {
-            IQueryable<TEntity> query = _dbSet;
+            IQueryable<TEntity> query = isTracked ? _dbSet : _dbSet.AsNoTracking();
             if (filter is not null)
             {
                 query = query.Where(filter);

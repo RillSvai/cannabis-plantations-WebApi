@@ -47,7 +47,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         [TypeFilter(typeof(CannabisTypeExistFilterAttribute))]
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
-        public async Task<ActionResult<ProductDto>> Create([FromBody] ProductCreateDto productDto, [FromQuery] int cannabisTypeId, [FromQuery] int agronomistId) 
+        public async Task<ActionResult<ProductDto>> Create([FromBody] ProductUpsertDto productDto, [FromQuery] int cannabisTypeId, [FromQuery] int agronomistId) 
         {
             Product product = new Product
             {
@@ -58,6 +58,40 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.ProductRepo.InsertAsync(product);
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new { productId = product.Id }, _mapper.Map<ProductDto>(product));
+        }
+        [HttpPut("{productId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [IdFilter]
+        [TypeFilter(typeof(CannabisTypeExistFilterAttribute))]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        [TypeFilter(typeof(ProductExistFilterAttribute))]
+        public async Task<IActionResult> Update([FromRoute] int productId, [FromBody] ProductUpsertDto productDto, [FromQuery] int cannabisTypeId, [FromQuery] int agronomistId) 
+        {
+            Product product = new Product
+            {
+                Id = productId,
+                Price = productDto.Price,
+                CannabisTypeId = cannabisTypeId,
+                AgronomistId = agronomistId
+            };
+            _unitOfWork.ProductRepo.Update(product);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
+        [HttpDelete("{productId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [IdFilter]
+        [TypeFilter(typeof(ProductExistFilterAttribute))]
+        public async Task<IActionResult> Delete([FromRoute] int productId) 
+        {
+            Product? product = HttpContext.Items["product"] as Product;
+            _unitOfWork.ProductRepo.Delete(product);
+            await _unitOfWork.Save();
+            return NoContent();
         }
     }
 }

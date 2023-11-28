@@ -2,7 +2,7 @@
 
 namespace CannabisPlantations.WebApi.Models.Dtos
 {
-    public class ProductCreateDto
+    public class ProductUpsertDto
     {
         [Required]
         [Range(10, 1000000)]
