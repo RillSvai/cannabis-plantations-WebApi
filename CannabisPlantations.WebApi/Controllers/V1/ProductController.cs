@@ -37,7 +37,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         [TypeFilter(typeof(ProductExistFilterAttribute))]
         public ActionResult<ProductDto> Get([FromRoute] int productId) 
-        {
+        {           
             ProductDto productDto = _mapper.Map<ProductDto>(HttpContext.Items["product"]);
             return Ok(productDto);
         }
@@ -80,18 +80,20 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
-        [HttpDelete("{productId:int}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [IdFilter]
-        [TypeFilter(typeof(ProductExistFilterAttribute))]
-        public async Task<IActionResult> Delete([FromRoute] int productId) 
-        {
-            Product? product = HttpContext.Items["product"] as Product;
-            _unitOfWork.ProductRepo.Delete(product);
-            await _unitOfWork.Save();
-            return NoContent();
-        }
+        // async Task
+        // async Task<sometype>
+        //[HttpDelete("{productId:int}")]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[IdFilter]
+        //[TypeFilter(typeof(ProductExistFilterAttribute))]
+        //public async Task<IActionResult> Delete([FromRoute] int productId)
+        //{
+        //    Product? product = HttpContext.Items["product"] as Product;
+        //    _unitOfWork.ProductRepo.Delete(product!);
+        //    await _unitOfWork.Save();
+        //    return NoContent();
+        //}
     }
 }

@@ -8,6 +8,6 @@
 
         public int AgronomistId { get; set; }
 
-        public int? Price { get; set; }
+        public int Price { get; set; }
     }
 }

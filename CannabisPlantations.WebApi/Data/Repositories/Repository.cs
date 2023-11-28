@@ -14,23 +14,23 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             _db = db;
             _dbSet = db.Set<TEntity>();
         }
-        public void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
             _dbSet.Remove(entity);
         }
 
-        public async Task DeleteAsync<TIdentifier>(TIdentifier id)
+        public virtual async Task DeleteAsync<TIdentifier>(TIdentifier id)
         {
             TEntity? entity = await _dbSet.FindAsync(id);
             _dbSet.Remove(entity!);
         }
 
-        public void DeleteRange(IEnumerable<TEntity> entities)
+        public virtual void DeleteRange(IEnumerable<TEntity> entities)
         {
             _dbSet.RemoveRange(entities);
         }
 
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "")
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "")
         {
             IQueryable<TEntity> query = _dbSet;
             if (filter is not null) 
@@ -44,7 +44,7 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             return query;
         }
 
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "", bool isTracked = false)
+        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "", bool isTracked = false)
         {
             IQueryable<TEntity> query = isTracked ? _dbSet : _dbSet.AsNoTracking();
             if (filter is not null)
@@ -58,12 +58,12 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task InsertAsync(TEntity entity)
+        public virtual async Task InsertAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             _dbSet.Update(entity);
         }

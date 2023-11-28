@@ -10,5 +10,10 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         {
             _db = db;
         }
+
+        //public override void Delete(Product entity)
+        //{
+        //    base.Delete(entity);
+        //}
     }
 }

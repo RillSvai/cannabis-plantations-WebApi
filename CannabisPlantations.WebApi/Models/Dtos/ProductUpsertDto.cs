@@ -6,6 +6,6 @@ namespace CannabisPlantations.WebApi.Models.Dtos
     {
         [Required]
         [Range(10, 1000000)]
-        public int? Price { get; set; }
+        public int Price { get; set; }
     }
 }

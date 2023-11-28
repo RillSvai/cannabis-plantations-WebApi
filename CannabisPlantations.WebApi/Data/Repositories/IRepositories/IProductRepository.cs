@@ -4,6 +4,5 @@ namespace CannabisPlantations.WebApi.Data.Repositories.IRepositories
 {
     public interface IProductRepository : IRepository<Product>
     {
-
     }
 }

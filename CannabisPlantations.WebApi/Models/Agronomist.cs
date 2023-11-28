@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CannabisPlantations.WebApi.Models;
 
 public partial class Agronomist
 {
+    [Key]
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<Harvest> Harvests { get; set; } = new List<Harvest>();
+    public ICollection<Harvest> Harvests { get; set; } = new List<Harvest>();
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    public ICollection<Product> Products { get; set; } = new List<Product>();
 
-    public virtual ICollection<Return> Returns { get; set; } = new List<Return>();
+    public ICollection<Return> Returns { get; set; } = new List<Return>();
 
-    public virtual ICollection<Tasting> Tastings { get; set; } = new List<Tasting>();
+    public ICollection<Tasting> Tastings { get; set; } = new List<Tasting>();
+    public ICollection<AgronomistBusinessTrips> AgronomistBusinessTrips { get;} = new List<AgronomistBusinessTrips>();
 
-    public virtual ICollection<BusinessTrip> BusinessTrips { get; set; } = new List<BusinessTrip>();
 }

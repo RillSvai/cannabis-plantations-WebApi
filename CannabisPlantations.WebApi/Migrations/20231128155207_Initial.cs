@@ -17,11 +17,11 @@ namespace CannabisPlantations.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Agronomi__3214EC07A55AD8E7", x => x.Id);
+                    table.PrimaryKey("PK_Agronomists", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,11 +30,11 @@ namespace CannabisPlantations.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Applicat__3214EC07EFBF25C1", x => x.Id);
+                    table.PrimaryKey("PK_Applications", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,12 +43,12 @@ namespace CannabisPlantations.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StartDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    EndDate = table.Column<DateTime>(type: "datetime", nullable: true)
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Business__3214EC07B94F5A1B", x => x.Id);
+                    table.PrimaryKey("PK_BusinessTrips", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,11 +57,11 @@ namespace CannabisPlantations.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Cannabis__3214EC07D6CC9167", x => x.Id);
+                    table.PrimaryKey("PK_CannabisTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,11 +70,11 @@ namespace CannabisPlantations.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Customer__3214EC072C779624", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,77 +83,84 @@ namespace CannabisPlantations.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Scopes__3214EC07B3FD58E6", x => x.Id);
+                    table.PrimaryKey("PK_Scopes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ApplicationCredentials",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Secret = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Secret = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ApplicationId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Applicat__3214EC07170F979D", x => x.Id);
+                    table.PrimaryKey("PK_ApplicationCredentials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__Applicati__Appli__60A75C0F",
+                        name: "FK_ApplicationCredentials_Applications_ApplicationId",
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BusinessTripAgronomists",
+                name: "AgronomistBusinessTrips",
                 columns: table => new
                 {
-                    AgronomistId = table.Column<int>(type: "int", nullable: false),
-                    BusinessTripId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BusinessTripId = table.Column<int>(type: "int", nullable: false),
+                    AgronomistId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Business__B2C1A236EAEEEEF7", x => new { x.AgronomistId, x.BusinessTripId });
+                    table.PrimaryKey("PK_AgronomistBusinessTrips", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__BusinessT__Agron__44FF419A",
+                        name: "FK_AgronomistBusinessTrips_Agronomists_AgronomistId",
                         column: x => x.AgronomistId,
                         principalTable: "Agronomists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__BusinessT__Busin__5441852A",
+                        name: "FK_AgronomistBusinessTrips_BusinessTrips_BusinessTripId",
                         column: x => x.BusinessTripId,
                         principalTable: "BusinessTrips",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Harvest",
+                name: "Harvests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AgronomistId = table.Column<int>(type: "int", nullable: false),
                     CannabisTypeId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime", nullable: true)
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Harvest__3214EC07BD39CE95", x => x.Id);
+                    table.PrimaryKey("PK_Harvests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__Harvest__Agronom__46E78A0C",
+                        name: "FK_Harvests_Agronomists_AgronomistId",
                         column: x => x.AgronomistId,
                         principalTable: "Agronomists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__Harvest__Cannabi__5165187F",
+                        name: "FK_Harvests_CannabisTypes_CannabisTypeId",
                         column: x => x.CannabisTypeId,
                         principalTable: "CannabisTypes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,41 +171,44 @@ namespace CannabisPlantations.WebApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CannabisTypeId = table.Column<int>(type: "int", nullable: false),
                     AgronomistId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: true)
+                    Price = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Products__3214EC075B649FFA", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__Products__Agrono__47DBAE45",
+                        name: "FK_Products_Agronomists_AgronomistId",
                         column: x => x.AgronomistId,
                         principalTable: "Agronomists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__Products__Cannab__52593CB8",
+                        name: "FK_Products_CannabisTypes_CannabisTypeId",
                         column: x => x.CannabisTypeId,
                         principalTable: "CannabisTypes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feedback",
+                name: "Feedbacks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime", nullable: true)
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Feedback__3214EC077A9455CB", x => x.Id);
+                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__Feedback__Custom__4BAC3F29",
+                        name: "FK_Feedbacks_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,21 +219,23 @@ namespace CannabisPlantations.WebApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AgronomistId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime", nullable: true)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Orders__3214EC074183CBE2", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__Orders__Agronomi__48CFD27E",
+                        name: "FK_Orders_Agronomists_AgronomistId",
                         column: x => x.AgronomistId,
                         principalTable: "Agronomists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__Orders__Customer__4CA06362",
+                        name: "FK_Orders_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -234,43 +246,49 @@ namespace CannabisPlantations.WebApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AgronomistId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime", nullable: true)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Returns__3214EC07CFA7A054", x => x.Id);
+                    table.PrimaryKey("PK_Returns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__Returns__Agronom__45F365D3",
+                        name: "FK_Returns_Agronomists_AgronomistId",
                         column: x => x.AgronomistId,
                         principalTable: "Agronomists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__Returns__Custome__4AB81AF0",
+                        name: "FK_Returns_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ScopeApplicationCredentials",
+                name: "ApplicationCredentialScopes",
                 columns: table => new
                 {
-                    ScopeId = table.Column<int>(type: "int", nullable: false),
-                    ApplicationCredentialId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationCredentialId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ScopeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__ScopeApp__4FAE9254E9E84959", x => new { x.ScopeId, x.ApplicationCredentialId });
+                    table.PrimaryKey("PK_ApplicationCredentialScopes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__ScopeAppl__Appli__6FE99F9F",
+                        name: "FK_ApplicationCredentialScopes_ApplicationCredentials_ApplicationCredentialId",
                         column: x => x.ApplicationCredentialId,
                         principalTable: "ApplicationCredentials",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__ScopeAppl__Scope__6E01572D",
+                        name: "FK_ApplicationCredentialScopes_Scopes_ScopeId",
                         column: x => x.ScopeId,
                         principalTable: "Scopes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -280,16 +298,17 @@ namespace CannabisPlantations.WebApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: true)
+                    Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__ProductS__3214EC07177E5FEF", x => x.Id);
+                    table.PrimaryKey("PK_ProductStorage", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__ProductSt__Produ__4E88ABD4",
+                        name: "FK_ProductStorage_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -298,20 +317,21 @@ namespace CannabisPlantations.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: true),
                     AgronomistId = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime", nullable: true)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Tastings__3214EC07D41C760C", x => x.Id);
+                    table.PrimaryKey("PK_Tastings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__Tastings__Agrono__440B1D61",
+                        name: "FK_Tastings_Agronomists_AgronomistId",
                         column: x => x.AgronomistId,
                         principalTable: "Agronomists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__Tastings__Produc__4D94879B",
+                        name: "FK_Tastings_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id");
@@ -321,20 +341,23 @@ namespace CannabisPlantations.WebApi.Migrations
                 name: "OrderDetails",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: true),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: true)
+                    Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__OrderDet__5835C37179EEE31C", x => new { x.ProductId, x.OrderId });
+                    table.PrimaryKey("PK_OrderDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__OrderDeta__Order__5535A963",
+                        name: "FK_OrderDetails_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__OrderDeta__Produ__4F7CD00D",
+                        name: "FK_OrderDetails_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id");
@@ -344,52 +367,63 @@ namespace CannabisPlantations.WebApi.Migrations
                 name: "ReturnDetails",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    ReturnId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: true)
+                    ReturnId = table.Column<int>(type: "int", nullable: true),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__ReturnDe__2B4898572FB78776", x => new { x.ProductId, x.ReturnId });
+                    table.PrimaryKey("PK_ReturnDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__ReturnDet__Produ__5070F446",
+                        name: "FK_ReturnDetails_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__ReturnDet__Retur__5629CD9C",
+                        name: "FK_ReturnDetails_Returns_ReturnId",
                         column: x => x.ReturnId,
                         principalTable: "Returns",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "TastingCustomers",
+                name: "CustomerTastings",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     TastingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__TastingC__4EF05ECA74ADE805", x => new { x.CustomerId, x.TastingId });
+                    table.PrimaryKey("PK_CustomerTastings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK__TastingCu__Custo__49C3F6B7",
+                        name: "FK_CustomerTastings_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__TastingCu__Tasti__534D60F1",
+                        name: "FK_CustomerTastings_Tastings_TastingId",
                         column: x => x.TastingId,
                         principalTable: "Tastings",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "UQ__Agronomi__737584F63DC65F9E",
-                table: "Agronomists",
-                column: "Name",
-                unique: true);
+                name: "IX_AgronomistBusinessTrips_AgronomistId",
+                table: "AgronomistBusinessTrips",
+                column: "AgronomistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AgronomistBusinessTrips_BusinessTripId",
+                table: "AgronomistBusinessTrips",
+                column: "BusinessTripId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApplicationCredentials_ApplicationId",
@@ -397,46 +431,38 @@ namespace CannabisPlantations.WebApi.Migrations
                 column: "ApplicationId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ_Secret",
-                table: "ApplicationCredentials",
-                column: "Secret",
-                unique: true);
+                name: "IX_ApplicationCredentialScopes_ApplicationCredentialId",
+                table: "ApplicationCredentialScopes",
+                column: "ApplicationCredentialId");
 
             migrationBuilder.CreateIndex(
-                name: "idx_AgronomistId",
-                table: "BusinessTripAgronomists",
-                column: "AgronomistId");
+                name: "IX_ApplicationCredentialScopes_ScopeId",
+                table: "ApplicationCredentialScopes",
+                column: "ScopeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BusinessTripAgronomists_BusinessTripId",
-                table: "BusinessTripAgronomists",
-                column: "BusinessTripId");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Cannabis__737584F6527CBB50",
-                table: "CannabisTypes",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Customer__737584F6EF9194F2",
-                table: "Customers",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Feedback_CustomerId",
-                table: "Feedback",
+                name: "IX_CustomerTastings_CustomerId",
+                table: "CustomerTastings",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Harvest_AgronomistId",
-                table: "Harvest",
+                name: "IX_CustomerTastings_TastingId",
+                table: "CustomerTastings",
+                column: "TastingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_CustomerId",
+                table: "Feedbacks",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Harvests_AgronomistId",
+                table: "Harvests",
                 column: "AgronomistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Harvest_CannabisTypeId",
-                table: "Harvest",
+                name: "IX_Harvests_CannabisTypeId",
+                table: "Harvests",
                 column: "CannabisTypeId");
 
             migrationBuilder.CreateIndex(
@@ -445,14 +471,19 @@ namespace CannabisPlantations.WebApi.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "idx_CustomerId",
-                table: "Orders",
-                column: "CustomerId");
+                name: "IX_OrderDetails_ProductId",
+                table: "OrderDetails",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_AgronomistId",
                 table: "Orders",
                 column: "AgronomistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CustomerId",
+                table: "Orders",
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_AgronomistId",
@@ -462,14 +493,18 @@ namespace CannabisPlantations.WebApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CannabisTypeId",
                 table: "Products",
-                column: "CannabisTypeId",
-                unique: true);
+                column: "CannabisTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ__ProductS__B40CC6CC9825AA36",
+                name: "IX_ProductStorage_ProductId",
                 table: "ProductStorage",
                 column: "ProductId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReturnDetails_ProductId",
+                table: "ReturnDetails",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReturnDetails_ReturnId",
@@ -477,38 +512,17 @@ namespace CannabisPlantations.WebApi.Migrations
                 column: "ReturnId");
 
             migrationBuilder.CreateIndex(
-                name: "idx_CustomerId",
-                table: "Returns",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Returns_AgronomistId",
                 table: "Returns",
                 column: "AgronomistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScopeApplicationCredentials_ApplicationCredentialId",
-                table: "ScopeApplicationCredentials",
-                column: "ApplicationCredentialId");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Scopes__737584F68222FCAD",
-                table: "Scopes",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "idx_CustomerId",
-                table: "TastingCustomers",
+                name: "IX_Returns_CustomerId",
+                table: "Returns",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TastingCustomers_TastingId",
-                table: "TastingCustomers",
-                column: "TastingId");
-
-            migrationBuilder.CreateIndex(
-                name: "idx_AgronomistId",
+                name: "IX_Tastings_AgronomistId",
                 table: "Tastings",
                 column: "AgronomistId");
 
@@ -522,13 +536,19 @@ namespace CannabisPlantations.WebApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BusinessTripAgronomists");
+                name: "AgronomistBusinessTrips");
 
             migrationBuilder.DropTable(
-                name: "Feedback");
+                name: "ApplicationCredentialScopes");
 
             migrationBuilder.DropTable(
-                name: "Harvest");
+                name: "CustomerTastings");
+
+            migrationBuilder.DropTable(
+                name: "Feedbacks");
+
+            migrationBuilder.DropTable(
+                name: "Harvests");
 
             migrationBuilder.DropTable(
                 name: "OrderDetails");
@@ -540,19 +560,7 @@ namespace CannabisPlantations.WebApi.Migrations
                 name: "ReturnDetails");
 
             migrationBuilder.DropTable(
-                name: "ScopeApplicationCredentials");
-
-            migrationBuilder.DropTable(
-                name: "TastingCustomers");
-
-            migrationBuilder.DropTable(
                 name: "BusinessTrips");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
-
-            migrationBuilder.DropTable(
-                name: "Returns");
 
             migrationBuilder.DropTable(
                 name: "ApplicationCredentials");
@@ -564,13 +572,19 @@ namespace CannabisPlantations.WebApi.Migrations
                 name: "Tastings");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Returns");
 
             migrationBuilder.DropTable(
                 name: "Applications");
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "Agronomists");

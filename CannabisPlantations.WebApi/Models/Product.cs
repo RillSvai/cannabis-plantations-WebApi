@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CannabisPlantations.WebApi.Models;
 
@@ -9,17 +10,19 @@ public partial class Product
     public int Id { get; set; }
     public int CannabisTypeId { get; set; }
     public int AgronomistId { get; set; }
-    public int? Price { get; set; }
+    public int Price { get; set; }
 
-    public virtual Agronomist Agronomist { get; set; } = null!;
+    [ForeignKey(nameof(AgronomistId))]
+    public Agronomist Agronomist { get; set; } = null!;
+    [ForeignKey(nameof(CannabisTypeId))]
 
-    public virtual CannabisType CannabisType { get; set; } = null!;
+    public CannabisType CannabisType { get; set; } = null!;
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+    public ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
-    public virtual ProductStorage? ProductStorage { get; set; }
+    public ProductStorage? ProductStorage { get; set; }
+   
+    public ICollection<ReturnDetail> ReturnDetails { get; } = new List<ReturnDetail>();
 
-    public virtual ICollection<ReturnDetail> ReturnDetails { get; set; } = new List<ReturnDetail>();
-
-    public virtual ICollection<Tasting> Tastings { get; set; } = new List<Tasting>();
+    public ICollection<Tasting> Tastings { get; set; } = new List<Tasting>();
 }
