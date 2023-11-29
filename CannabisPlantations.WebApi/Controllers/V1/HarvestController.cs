@@ -1,0 +1,86 @@
+﻿using AutoMapper;
+using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.AgronomistActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CannabisTypeActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.HarvestActionFilters;
+using CannabisPlantations.WebApi.Models;
+using CannabisPlantations.WebApi.Models.Dtos;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CannabisPlantations.WebApi.Controllers.V1
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [ApiVersion("1.0")]
+    public class HarvestController : ControllerBase
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        public HarvestController(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<HarvestDto>> GetAll() 
+        {
+            IEnumerable<HarvestDto> harvestDtos = _mapper.Map<IEnumerable<HarvestDto>>(_unitOfWork.HarvestRepo.GetAll());
+            return Ok(harvestDtos);
+        }
+        [HttpGet("{harvestId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(HarvestExistFilterAttribute))]
+        public ActionResult<HarvestDto> Get([FromRoute] int harvestId) 
+        {
+            HarvestDto harvestDto = _mapper.Map<HarvestDto>(HttpContext.Items["harvest"]);
+            return Ok(harvestDto);
+        }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        [TypeFilter(typeof(CannabisTypeExistFilterAttribute))]
+        public async Task<ActionResult<HarvestDto>> Create([FromBody] HarvestUpsertDto harvestDto, [FromQuery] int agronomistId, [FromQuery] int cannabisTypeId) 
+        {
+            Harvest harvest = new Harvest() 
+            {
+                Quantity = (int)harvestDto.Quantity!,
+                Date = (DateTime)harvestDto.Date!,
+                AgronomistId = agronomistId,
+                CannabisTypeId = cannabisTypeId
+            };
+            await _unitOfWork.HarvestRepo.InsertAsync(harvest);
+            await _unitOfWork.Save();
+            return CreatedAtAction(nameof(Get), new { harvestId = harvest.Id }, _mapper.Map<HarvestDto>(harvest));
+        }
+        [HttpPut("{harvestId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        [TypeFilter(typeof(CannabisTypeExistFilterAttribute))]
+        [TypeFilter(typeof(HarvestExistFilterAttribute))]
+        public async Task<IActionResult> Update([FromRoute] int harvestId, [FromBody] HarvestUpsertDto harvestDto, [FromQuery] int agronomistId, [FromQuery] int cannabisTypeId) 
+        {
+            Harvest harvest = new Harvest() 
+            {
+                Id = harvestId,
+                Quantity = (int)harvestDto.Quantity!,
+                Date = (DateTime)harvestDto.Date!,
+                AgronomistId = agronomistId,
+                CannabisTypeId = cannabisTypeId
+            };
+            _unitOfWork.HarvestRepo.Update(harvest);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
+    }
+}

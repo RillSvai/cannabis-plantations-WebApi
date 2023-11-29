@@ -13,6 +13,7 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             AgronomistRepo = new AgronomistRepository(db);
             CustomerRepo = new CustomerRepository(db);
             OrderRepo = new OrderRepository(db);
+            HarvestRepo = new HarvestRepository(db);
         }
         public IProductRepository ProductRepo { get; }
 
@@ -21,6 +22,7 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         public IAgronomistRepository AgronomistRepo {get; }
         public ICustomerRepository CustomerRepo { get; }
         public IOrderRepository OrderRepo { get; }
+        public IHarvestRepository HarvestRepo { get; }
 
         public async Task Save()
         {

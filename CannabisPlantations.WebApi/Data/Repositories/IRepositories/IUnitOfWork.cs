@@ -7,6 +7,7 @@
         IAgronomistRepository AgronomistRepo { get; }
         ICustomerRepository CustomerRepo { get; }
         IOrderRepository OrderRepo { get; }
+        IHarvestRepository HarvestRepo { get; }
         Task Save();
     }
 }

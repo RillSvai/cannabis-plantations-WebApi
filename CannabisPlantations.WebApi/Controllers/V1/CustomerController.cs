@@ -4,13 +4,13 @@ using CannabisPlantations.WebApi.Filters.V1.ActionFilters;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CustomerActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CannabisPlantations.WebApi.Controllers.V1
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class CustomerController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
