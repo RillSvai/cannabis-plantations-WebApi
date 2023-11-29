@@ -38,6 +38,17 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             CustomerDto customerDto = _mapper.Map<CustomerDto>(HttpContext.Items["customer"]);
             return Ok(customerDto);
         }
+        [HttpGet("{customerId:int}/orders")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public ActionResult<IEnumerable<OrderDto>> GetOrders(int customerId)
+        {
+            IEnumerable<OrderDto> orders = _mapper.Map<IEnumerable<OrderDto>>(_unitOfWork.OrderRepo.GetAll(o => o.CustomerId == customerId));
+            return Ok(orders);
+        }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
