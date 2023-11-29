@@ -80,18 +80,19 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
-        //[HttpDelete("{productId:int}")]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[IdFilter]
-        //[TypeFilter(typeof(ProductExistFilterAttribute))]
-        //public async Task<IActionResult> Delete([FromRoute] int productId)
-        //{
-        //    Product? product = HttpContext.Items["product"] as Product;
-        //    _unitOfWork.ProductRepo.Delete(product!);
-        //    await _unitOfWork.Save();
-        //    return NoContent();
-        //}
+        [HttpDelete("{productId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [IdFilter]
+        [TypeFilter(typeof(ProductExistFilterAttribute))]
+        public async Task<IActionResult> Delete([FromRoute] int productId)
+        {
+            Product? product = HttpContext.Items["product"] as Product;
+            _unitOfWork.TastingRepo.DeleteRange(_unitOfWork.TastingRepo.GetAll(t => t.ProductId == productId));
+            _unitOfWork.ProductRepo.Delete(product!);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
     }
 }
