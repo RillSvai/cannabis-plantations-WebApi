@@ -71,5 +71,24 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
+        [HttpDelete("{agronomistId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public async Task<IActionResult> Delete([FromRoute] int agronomistId) 
+        {
+            Agronomist agronomist = (Agronomist)HttpContext.Items["agronomist"]!;
+            _unitOfWork.OrderRepo.DeleteRange(_unitOfWork.OrderRepo.GetAll(o => o.AgronomistId == agronomistId));
+            _unitOfWork.ReturnRepo.DeleteRange(_unitOfWork.ReturnRepo.GetAll(r => r.AgronomistId == agronomistId));
+            _unitOfWork.TastingRepo.DeleteRange(_unitOfWork.TastingRepo.GetAll(t => t.AgronomistId == agronomistId));
+            IEnumerable<Product> products = _unitOfWork.ProductRepo.GetAll(p => p.AgronomistId == agronomistId);
+            _unitOfWork.TastingRepo.DeleteRange(_unitOfWork.TastingRepo.GetAll(t => products.Any(p => p.Id == t.ProductId)));
+            _unitOfWork.ProductRepo.DeleteRange(products);
+            _unitOfWork.AgronomistRepo.Delete(agronomist);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
     }
 }
