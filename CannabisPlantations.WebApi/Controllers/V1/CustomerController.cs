@@ -5,6 +5,7 @@ using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CustomerActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 
 namespace CannabisPlantations.WebApi.Controllers.V1
 {
@@ -37,6 +38,17 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         {
             CustomerDto customerDto = _mapper.Map<CustomerDto>(HttpContext.Items["customer"]);
             return Ok(customerDto);
+        }
+        [HttpGet("{customerId:int}/purchased-duration/products")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public ActionResult<IEnumerable<ProductDto>> GetPurchasedProducts([FromRoute] int customerId, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<ProductDto> productDtos = _mapper.Map<IEnumerable<ProductDto>>(_unitOfWork.CustomerRepo.GetPurchasedProducts(customerId, since, until));
+            return Ok(productDtos);
         }
         [HttpGet("{customerId:int}/orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]

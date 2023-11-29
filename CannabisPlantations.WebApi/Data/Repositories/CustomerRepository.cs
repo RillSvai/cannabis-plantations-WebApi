@@ -24,5 +24,19 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             _db.Feedbacks.RemoveRange(feedbacks);
             base.DeleteRange(entities);
         }
+
+        public IEnumerable<Product?> GetPurchasedProducts(int customerId, DateTime since, DateTime until)
+        {
+            return _db.OrderDetails
+                .Join(_db.Orders, od => od.OrderId, o => o.Id, (od, o) => new
+                {
+                    ProductId = od.ProductId,
+                    Date = o.Date,
+                    CustomerId = o.CustomerId
+                })
+                .Where(od_o => od_o.CustomerId == customerId && od_o.Date >= since && od_o.Date <= until)
+                .GroupBy(od_o => od_o.ProductId)
+                .Select(od_o => _db.Products.FirstOrDefault(p => p.Id == od_o.Key));
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace CannabisPlantations.WebApi.Filters.V1.ActionFilters
             int[] ids = context.ActionArguments.Select(pair => pair.Value).OfType<int>().ToArray();
             if (ids.Length > 0 && ids.Any(id => id <= 0)) 
             {
-                context.ModelState.AddModelError("", "At least one id is not valid.");
+                context.ModelState.AddModelError("", "At least one id or number 'N' is not valid.");
                 ValidationProblemDetails details = new ValidationProblemDetails(context.ModelState)
                 {
                     Status = StatusCodes.Status400BadRequest

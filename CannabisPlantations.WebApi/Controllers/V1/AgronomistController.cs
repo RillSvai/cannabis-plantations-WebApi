@@ -39,6 +39,18 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             AgronomistDto agronomistDto = _mapper.Map<AgronomistDto>(HttpContext.Items["agronomist"]);
             return Ok(agronomistDto);
         }
+        [HttpGet("{agronomistId:int}/min-sales-duration/customers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<IEnumerable<CustomerDto>> GetCustomersByMinSalesDuration([FromRoute] int agronomistId, [FromQuery] int salesNumber,[FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<CustomerDto> customerDtos = _mapper
+                .Map<IEnumerable<CustomerDto>>(_unitOfWork.AgronomistRepo.GetCustomersByMinSales(agronomistId, salesNumber, since, until));
+            return Ok(customerDtos);
+        }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]

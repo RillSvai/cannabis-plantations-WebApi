@@ -1,5 +1,6 @@
 ﻿using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
 using CannabisPlantations.WebApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CannabisPlantations.WebApi.Data.Repositories
 {
@@ -23,6 +24,15 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             _db.AgronomistBusinessTrips.RemoveRange(agronomistBusinessTrips);
             _db.Harvests.RemoveRange(harvests);
             base.DeleteRange(entities);
+        }
+
+        public IEnumerable<Customer?> GetCustomersByMinSales(int agronomistId, int salesNumber, DateTime since, DateTime until)
+        {
+            return _db.Orders
+                .Where(o => o.AgronomistId == agronomistId && o.Date <= until && o.Date >= since)
+                .GroupBy(o => o.CustomerId)
+                .Where(g => g.Count() >= salesNumber)
+                .Select( g => _db.Customers.FirstOrDefault(c => c.Id == g.Key));
         }
     }
 }
