@@ -17,6 +17,8 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             TastingRepo = new TastingRepository(db);
             FeedbackRepo = new FeedbackRepository(db);
             BusinessTripRepo = new BusinessTripRepository(db);
+            ReturnRepo = new ReturnRepository(db);
+            ProductStorageRepo = new ProductStorageRepository(db);  
         }
         public IProductRepository ProductRepo { get; }
         public ICannabisTypeRepository CannabisTypeRepo { get; }
@@ -27,6 +29,8 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         public ITastingRepository TastingRepo { get; }
         public IFeedbackRepository FeedbackRepo { get; }
         public IBusinessTripRepository BusinessTripRepo { get; }
+        public IReturnRepository ReturnRepo { get; }
+        public IProductStorageRepository ProductStorageRepo { get; }
 
         public async Task Save()
         {

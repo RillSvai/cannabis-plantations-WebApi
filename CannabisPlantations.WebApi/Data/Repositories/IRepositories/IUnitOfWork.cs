@@ -11,6 +11,8 @@
         ITastingRepository TastingRepo { get; }
         IFeedbackRepository FeedbackRepo { get; }
         IBusinessTripRepository BusinessTripRepo { get; }
+        IReturnRepository ReturnRepo { get; }
+        IProductStorageRepository ProductStorageRepo { get; }
         Task Save();
     }
 }
