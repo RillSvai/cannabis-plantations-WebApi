@@ -80,5 +80,18 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
+        [HttpDelete("{tastingId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [IdFilter]
+        [TypeFilter(typeof(TastingExistFilterAttribute))]
+        public async Task<IActionResult> Delete([FromRoute] int tastingId) 
+        {
+            Tasting tasting = (Tasting)HttpContext.Items["tasting"]!; 
+            _unitOfWork.TastingRepo.Delete(tasting);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
     }
 }

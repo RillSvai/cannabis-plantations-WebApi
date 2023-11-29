@@ -19,12 +19,6 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             _dbSet.Remove(entity);
         }
 
-        public virtual async Task DeleteAsync<TIdentifier>(TIdentifier id)
-        {
-            TEntity? entity = await _dbSet.FindAsync(id);
-            _dbSet.Remove(entity!);
-        }
-
         public virtual void DeleteRange(IEnumerable<TEntity> entities)
         {
             _dbSet.RemoveRange(entities);

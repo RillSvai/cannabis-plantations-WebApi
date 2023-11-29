@@ -82,5 +82,18 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
+        [HttpDelete("{harvestId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(HarvestExistFilterAttribute))]
+        public async Task<IActionResult> Delete([FromRoute] int harvestId) 
+        {
+            Harvest harvest = (Harvest)HttpContext.Items["harvest"]!;
+            _unitOfWork.HarvestRepo.Delete(harvest);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
     }
 }

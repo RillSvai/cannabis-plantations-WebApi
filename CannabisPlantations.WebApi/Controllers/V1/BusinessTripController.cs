@@ -74,5 +74,19 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
+        [HttpDelete("{businessTripId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [IdFilter]
+        [TypeFilter(typeof(BusinessTripExistFilterAttribute))]
+        public async Task<IActionResult> Delete([FromRoute] int businessTripId) 
+        {
+            BusinessTrip businessTrip = (BusinessTrip)HttpContext.Items["businessTrip"]!;
+            _unitOfWork.BusinessTripRepo.Delete(businessTrip);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
+
     }
 }

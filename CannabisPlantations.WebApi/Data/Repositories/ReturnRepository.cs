@@ -10,5 +10,15 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         {
             _db = db;
         }
+        public override void Delete(Return entity)
+        {
+            _db.ReturnDetails.RemoveRange(_db.ReturnDetails.Where(rd => rd.ReturnId == entity.Id));
+            base.Delete(entity);
+        }
+        public override void DeleteRange(IEnumerable<Return> entities)
+        {
+            IEnumerable<ReturnDetail> returnDetails = _db.ReturnDetails.Where(rd => entities.Any(r => r.Id == rd.ReturnId));
+            base.DeleteRange(entities);
+        }
     }
 }

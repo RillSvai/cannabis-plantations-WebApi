@@ -70,6 +70,19 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
+        [HttpDelete("{productStorageId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(ProductStorageExistFilterAttribute))]
+        public async Task<IActionResult> Delete([FromRoute] int productStorageId) 
+        {
+            ProductStorage productStorage = (ProductStorage)HttpContext.Items["productStorage"]!;
+            _unitOfWork.ProductStorageRepo.Delete(productStorage);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
 
     }
 }

@@ -82,5 +82,18 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             return NoContent();
         }
+        [HttpDelete("{returnId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(ReturnExistFilterAttribute))]
+        public async Task<IActionResult> Delete([FromRoute] int returnId) 
+        {
+            Return productReturn = (Return)HttpContext.Items["return"]!;
+            _unitOfWork.ReturnRepo.Delete(productReturn);
+            await _unitOfWork.Save();   
+            return NoContent();
+        }
     }
 }

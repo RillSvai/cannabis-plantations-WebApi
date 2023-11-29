@@ -10,5 +10,15 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         {
             _db = db;
         }
+        public override void Delete(BusinessTrip entity)
+        {
+            _db.AgronomistBusinessTrips.RemoveRange(_db.AgronomistBusinessTrips.Where(abt => abt.BusinessTripId == entity.Id));
+            base.Delete(entity);
+        }
+        public override void DeleteRange(IEnumerable<BusinessTrip> entities)
+        {
+            IEnumerable<AgronomistBusinessTrips> agronomistBusinessTrips = _db.AgronomistBusinessTrips.Where(abt => entities.Any(bt => bt.Id == abt.BusinessTripId));
+            base.DeleteRange(entities);
+        }
     }
 }

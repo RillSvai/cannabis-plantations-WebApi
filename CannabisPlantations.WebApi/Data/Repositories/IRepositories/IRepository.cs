@@ -10,6 +10,5 @@ namespace CannabisPlantations.WebApi.Data.Repositories.IRepositories
         void Update(TEntity entity);
         void Delete(TEntity entity);
         void DeleteRange(IEnumerable<TEntity> entities);
-        Task DeleteAsync<TIdentifier>(TIdentifier id);
     }
 }
