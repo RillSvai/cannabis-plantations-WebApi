@@ -2,6 +2,7 @@
 using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.ProductActionFilters;
+using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,6 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         }
         [HttpGet("{productStorageId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [IdFilter]
@@ -39,5 +39,37 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             ProductStorageDto productStorageDto = _mapper.Map<ProductStorageDto>(HttpContext.Items["productStorage"]);
             return Ok(productStorageDto);
         }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(ProductExistFilterAttribute))]
+        public async Task<ActionResult<ProductStorageDto>> Create([FromBody] ProductStorageUpsertDto productStorageDto, [FromQuery] int productId) 
+        {
+            ProductStorage productStorage = new ProductStorage() 
+            {
+                Quantity = (int)productStorageDto.Quantity!,
+                ProductId = productId
+            };
+            await _unitOfWork.ProductStorageRepo.InsertAsync(productStorage);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
+        [HttpPut("{productStorageId:int}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(ProductStorageExistFilterAttribute))]
+        public async Task<IActionResult> Update([FromRoute] int productStorageId, [FromBody] ProductStorageUpsertDto productStorageDto) 
+        {
+            ProductStorage? productStorage = HttpContext.Items["productStorage"] as ProductStorage;
+            productStorage!.Quantity = (int)productStorageDto.Quantity!;
+            _unitOfWork.ProductStorageRepo.Update(productStorage);
+            await _unitOfWork.Save();
+            return NoContent();
+        }
+
     }
 }
