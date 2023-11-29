@@ -10,6 +10,7 @@
         IHarvestRepository HarvestRepo { get; }
         ITastingRepository TastingRepo { get; }
         IFeedbackRepository FeedbackRepo { get; }
+        IBusinessTripRepository BusinessTripRepo { get; }
         Task Save();
     }
 }
