@@ -41,7 +41,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(harvestDto);
         }
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [IdFilter]
@@ -61,7 +61,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return CreatedAtAction(nameof(Get), new { harvestId = harvest.Id }, _mapper.Map<HarvestDto>(harvest));
         }
         [HttpPut("{harvestId:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [IdFilter]

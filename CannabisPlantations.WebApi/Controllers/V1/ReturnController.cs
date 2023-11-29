@@ -6,6 +6,9 @@ using CannabisPlantations.WebApi.Models.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.ReturnActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.AgronomistActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CustomerActionFilters;
+using CannabisPlantations.WebApi.Models;
 
 namespace CannabisPlantations.WebApi.Controllers.V1
 {
@@ -30,7 +33,6 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         }
         [HttpGet("{returnId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [IdFilter]
@@ -39,6 +41,46 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         {
             ReturnDto returnDto = _mapper.Map<ReturnDto>(HttpContext.Items["return"]);
             return Ok(returnDto);
+        }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public async Task<ActionResult<ReturnDto>> Create([FromBody] ReturnUpsertDto returnDto, [FromQuery] int agronomistId, [FromQuery] int customerId) 
+        {
+            Return productReturn = new Return()
+            {
+                Date = (DateTime)returnDto.Date!,
+                AgronomistId = agronomistId,
+                CustomerId = customerId
+            };
+            await _unitOfWork.ReturnRepo.InsertAsync(productReturn);
+            await _unitOfWork.Save();
+            return CreatedAtAction(nameof(Get), new { returnId = productReturn.Id }, _mapper.Map<ReturnDto>(productReturn));
+        }
+        [HttpPut("{returnId:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        [TypeFilter(typeof(ReturnExistFilterAttribute))]
+        public async Task<IActionResult> Update([FromRoute] int returnId, [FromBody] ReturnUpsertDto returnDto, [FromQuery] int agronomistId, [FromQuery] int customerId) 
+        {
+            Return productReturn = new Return()
+            {
+                Id = returnId,
+                AgronomistId = agronomistId,
+                CustomerId = customerId,
+                Date = (DateTime)returnDto.Date!,
+            }; 
+            _unitOfWork.ReturnRepo.Update(productReturn);
+            await _unitOfWork.Save();
+            return NoContent();
         }
     }
 }

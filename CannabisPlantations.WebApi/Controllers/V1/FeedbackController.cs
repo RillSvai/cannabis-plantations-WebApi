@@ -59,7 +59,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return CreatedAtAction(nameof(Get), new {feedbackId = feedback.Id}, _mapper.Map<FeedbackDto>(feedback));
         }
         [HttpPut("{feedbackId:int}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [IdFilter]

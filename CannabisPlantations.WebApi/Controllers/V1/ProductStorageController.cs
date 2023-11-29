@@ -40,7 +40,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(productStorageDto);
         }
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [IdFilter]
@@ -57,7 +57,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return NoContent();
         }
         [HttpPut("{productStorageId:int}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [IdFilter]
