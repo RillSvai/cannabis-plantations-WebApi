@@ -13,6 +13,10 @@
         IBusinessTripRepository BusinessTripRepo { get; }
         IReturnRepository ReturnRepo { get; }
         IProductStorageRepository ProductStorageRepo { get; }
+        IOrderDetailRepository OrderDetailRepo { get; }
+        IReturnDetailRepository ReturnDetailRepo { get; }
+        ICustomerTastingRepository CustomerTastingRepo { get; }
+        IAgronomistBusinessTripRepository AgronomistBusinessTripRepo {  get; }
         Task Save();
     }
 }
