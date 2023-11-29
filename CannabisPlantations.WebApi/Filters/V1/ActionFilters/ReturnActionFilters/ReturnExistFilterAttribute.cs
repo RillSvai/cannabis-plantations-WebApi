@@ -14,7 +14,7 @@ namespace CannabisPlantations.WebApi.Filters.V1.ActionFilters.ReturnActionFilter
         }
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            int? id = context.ActionArguments["productStorageId"] as int?;
+            int? id = context.ActionArguments["returnId"] as int?;
             Return? productReturn = await _unitOfWork.ReturnRepo.GetAsync(r => r.Id == id);
             if (productReturn is null) 
             {
