@@ -18,6 +18,7 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         public override void DeleteRange(IEnumerable<Return> entities)
         {
             IEnumerable<ReturnDetail> returnDetails = _db.ReturnDetails.Where(rd => entities.Any(r => r.Id == rd.ReturnId));
+            _db.ReturnDetails.RemoveRange(returnDetails);
             base.DeleteRange(entities);
         }
     }
