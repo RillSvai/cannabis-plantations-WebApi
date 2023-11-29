@@ -9,6 +9,7 @@
         IOrderRepository OrderRepo { get; }
         IHarvestRepository HarvestRepo { get; }
         ITastingRepository TastingRepo { get; }
+        IFeedbackRepository FeedbackRepo { get; }
         Task Save();
     }
 }
