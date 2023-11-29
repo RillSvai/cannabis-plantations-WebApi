@@ -8,6 +8,7 @@
         ICustomerRepository CustomerRepo { get; }
         IOrderRepository OrderRepo { get; }
         IHarvestRepository HarvestRepo { get; }
+        ITastingRepository TastingRepo { get; }
         Task Save();
     }
 }

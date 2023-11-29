@@ -17,6 +17,8 @@ namespace CannabisPlantations.WebApi.Utility
             CreateMap<Order,OrderDto>();
             
             CreateMap<Harvest, HarvestDto>();
+
+            CreateMap<Tasting, TastingDto>();
         }
     }
 }

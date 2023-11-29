@@ -16,10 +16,8 @@ public partial class Tasting
 
     public DateTime Date { get; set; }
     [ForeignKey(nameof(AgronomistId))]
-
     public Agronomist Agronomist { get; set; } = null!;
     [ForeignKey(nameof(ProductId))]
-
     public Product Product { get; set; } = null!;
 
     public ICollection<CustomerTastings> CustomerTastings { get;} = new List<CustomerTastings>();
