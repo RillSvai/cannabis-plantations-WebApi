@@ -24,6 +24,20 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             _dbSet.RemoveRange(entities);
         }
 
+        public TEntity? Get(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "", bool isTracked = false)
+        {
+            IQueryable<TEntity> query = isTracked ? _dbSet : _dbSet.AsNoTracking();
+            if (filter is not null)
+            {
+                query = query.Where(filter);
+            }
+            foreach (string includeProperty in includeProperties.Split(',', StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+            return query.FirstOrDefault();
+        }
+
         public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? filter = null, string includeProperties = "")
         {
             IQueryable<TEntity> query = _dbSet;
@@ -55,6 +69,11 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         public virtual async Task InsertAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
+        }
+
+        public async Task InsertRangeAsync(IEnumerable<TEntity> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
         }
 
         public virtual void Update(TEntity entity)

@@ -54,14 +54,19 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [TypeFilter(typeof(AgronomistUpsertFilterAttribute))]
         public async Task<ActionResult<AgronomistDto>> Create([FromBody] AgronomistUpsertDto agronomistDto)
         {
             Agronomist agronomist = new Agronomist() 
             {
                 Name = agronomistDto.Name,
                 IsAvailable = agronomistDto.IsAvailable
-            };
+            };      
             await _unitOfWork.AgronomistRepo.InsertAsync(agronomist);
+            await _unitOfWork.Save();
+            await _unitOfWork.AgronomistBusinessTripRepo
+                .InsertRangeAsync((agronomistDto.BusinessTripIds ?? new int[0])
+                .Select(i => new AgronomistBusinessTrips { AgronomistId = agronomist.Id, BusinessTripId = i}));
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new {agronomistId = agronomist.Id}, _mapper.Map<AgronomistDto>(agronomist));
         }
@@ -71,6 +76,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [IdFilter]
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        [TypeFilter(typeof(AgronomistUpsertFilterAttribute))]
         public async Task<IActionResult> Update([FromRoute] int agronomistId, [FromBody] AgronomistUpsertDto agronomistDto ) 
         {
             Agronomist agronomist = new Agronomist() 
@@ -80,6 +86,11 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 IsAvailable = agronomistDto.IsAvailable
             };
             _unitOfWork.AgronomistRepo.Update(agronomist);
+            await _unitOfWork.Save();
+            _unitOfWork.AgronomistBusinessTripRepo.DeleteRange(_unitOfWork.AgronomistBusinessTripRepo.GetAll(abt => abt.AgronomistId == agronomistId));
+            await _unitOfWork.AgronomistBusinessTripRepo
+               .InsertRangeAsync((agronomistDto.BusinessTripIds ?? new int[0])
+               .Select(i => new AgronomistBusinessTrips { AgronomistId = agronomistId, BusinessTripId = i }));
             await _unitOfWork.Save();
             return NoContent();
         }

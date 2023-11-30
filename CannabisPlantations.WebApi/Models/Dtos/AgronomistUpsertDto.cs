@@ -9,5 +9,6 @@ namespace CannabisPlantations.WebApi.Models.Dtos
         public string Name { get; set; } = null!;
 
         public bool IsAvailable { get; set; }
+        public int[]? BusinessTripIds { get; set; }
     }
 }
