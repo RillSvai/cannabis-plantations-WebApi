@@ -47,6 +47,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         [TypeFilter(typeof(ProductExistFilterAttribute))]
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        [TypeFilter(typeof(TastingUpsertFilterAttribute))]
         public async Task<ActionResult<TastingDto>> Create([FromBody] TastingUpsertDto tastingDto, [FromQuery] int productId, [FromQuery] int agronomistId) 
         {
             Tasting tasting = new Tasting() 
@@ -56,6 +57,10 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 AgronomistId = agronomistId
             };
             await _unitOfWork.TastingRepo.InsertAsync(tasting);
+            await _unitOfWork.Save();
+            await _unitOfWork.CustomerTastingRepo
+                .InsertRangeAsync((tastingDto.CustomerIds ?? Array.Empty<int>())
+                .Select(i => new CustomerTastings { CustomerId = i, TastingId = tasting.Id }));
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new { tastingId = tasting.Id }, _mapper.Map<TastingDto>(tasting));
         }
@@ -67,6 +72,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(ProductExistFilterAttribute))]
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
         [TypeFilter(typeof(TastingExistFilterAttribute))]
+        [TypeFilter(typeof(TastingUpsertFilterAttribute))]
         public async Task<IActionResult> Update([FromRoute] int tastingId, [FromBody] TastingUpsertDto tastingDto, [FromQuery] int productId, [FromQuery] int agronomistId) 
         {
             Tasting tasting = new Tasting()
@@ -77,6 +83,11 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 ProductId = productId,
             };
             _unitOfWork.TastingRepo.Update(tasting);
+            await _unitOfWork.Save();
+            _unitOfWork.CustomerTastingRepo.DeleteRange(_unitOfWork.CustomerTastingRepo.GetAll(ct => ct.TastingId == tastingId));
+            await _unitOfWork.CustomerTastingRepo
+                .InsertRangeAsync((tastingDto.CustomerIds ?? Array.Empty<int>())
+                .Select(i => new CustomerTastings { CustomerId = i, TastingId = tasting.Id }));
             await _unitOfWork.Save();
             return NoContent();
         }
