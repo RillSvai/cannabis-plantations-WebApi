@@ -90,6 +90,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             await _unitOfWork.CustomerTastingRepo
                 .InsertRangeAsync((customerDto.TastingIds ?? Array.Empty<int>())
+                .Distinct()
                 .Select(i => new CustomerTastings { CustomerId = customer.Id, TastingId = i }));
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new {customerId = customer.Id}, _mapper.Map<CustomerDto>(customer));
@@ -113,6 +114,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             _unitOfWork.CustomerTastingRepo.DeleteRange(_unitOfWork.CustomerTastingRepo.GetAll(ct => ct.CustomerId == customerId));
             await _unitOfWork.CustomerTastingRepo
                 .InsertRangeAsync((customerDto.TastingIds ?? Array.Empty<int>())
+                .Distinct()
                 .Select(i => new CustomerTastings { CustomerId = customerId, TastingId = i }));
             await _unitOfWork.Save();
             return NoContent();

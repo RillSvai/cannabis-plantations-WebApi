@@ -56,6 +56,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.Save();
             await _unitOfWork.AgronomistBusinessTripRepo
                 .InsertRangeAsync((businessTripDto.AgronomistIds ?? Array.Empty<int>())
+                .Distinct()
                 .Select(i => new AgronomistBusinessTrips { AgronomistId = i, BusinessTripId = businessTrip.Id }));
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new { businessTripId = businessTrip.Id }, _mapper.Map<BusinessTripDto>(businessTrip));
@@ -81,6 +82,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             _unitOfWork.AgronomistBusinessTripRepo.DeleteRange(_unitOfWork.AgronomistBusinessTripRepo.GetAll(abt => abt.BusinessTripId == businessTrip.Id));
             await _unitOfWork.AgronomistBusinessTripRepo
                 .InsertRangeAsync((businessTripDto.AgronomistIds ?? new int[0])
+                .Distinct()
                 .Select(i => new AgronomistBusinessTrips { AgronomistId = i, BusinessTripId = businessTrip.Id }));
             await _unitOfWork.Save();
             return NoContent();
