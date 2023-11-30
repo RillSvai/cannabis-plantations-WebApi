@@ -49,6 +49,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
         [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        [TypeFilter(typeof(ReturnUpsertFilterAttribute))]
         public async Task<ActionResult<ReturnDto>> Create([FromBody] ReturnUpsertDto returnDto, [FromQuery] int agronomistId, [FromQuery] int customerId) 
         {
             Return productReturn = new Return()
@@ -58,6 +59,15 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 CustomerId = customerId
             };
             await _unitOfWork.ReturnRepo.InsertAsync(productReturn);
+            await _unitOfWork.Save();
+            await _unitOfWork.ReturnDetailRepo
+               .InsertRangeAsync(Enumerable.Range(0, returnDto.ProductQuantities?.Length ?? 0)
+               .Select(i => new ReturnDetail
+               {
+                   ProductId = returnDto.ProductIds![i],
+                   Quantity = returnDto.ProductQuantities![i],
+                   ReturnId = productReturn.Id
+               }));
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new { returnId = productReturn.Id }, _mapper.Map<ReturnDto>(productReturn));
         }
@@ -69,6 +79,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
         [TypeFilter(typeof(CustomerExistFilterAttribute))]
         [TypeFilter(typeof(ReturnExistFilterAttribute))]
+        [TypeFilter(typeof(ReturnUpsertFilterAttribute))]
         public async Task<IActionResult> Update([FromRoute] int returnId, [FromBody] ReturnUpsertDto returnDto, [FromQuery] int agronomistId, [FromQuery] int customerId) 
         {
             Return productReturn = new Return()
@@ -79,6 +90,16 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 Date = (DateTime)returnDto.Date!,
             }; 
             _unitOfWork.ReturnRepo.Update(productReturn);
+            await _unitOfWork.Save();
+            _unitOfWork.ReturnDetailRepo.DeleteRange(_unitOfWork.ReturnDetailRepo.GetAll(rd => rd.ReturnId == returnId));
+            await _unitOfWork.ReturnDetailRepo
+               .InsertRangeAsync(Enumerable.Range(0, returnDto.ProductQuantities?.Length ?? 0)
+               .Select(i => new ReturnDetail
+               {
+                   ProductId = returnDto.ProductIds![i],
+                   Quantity = returnDto.ProductQuantities![i],
+                   ReturnId = productReturn.Id
+               }));
             await _unitOfWork.Save();
             return NoContent();
         }
