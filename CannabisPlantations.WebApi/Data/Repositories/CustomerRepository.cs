@@ -88,5 +88,12 @@ namespace CannabisPlantations.WebApi.Data.Repositories
                 .GroupBy(od_o => od_o.ProductId)
                 .Select(od_o => _db.Products.FirstOrDefault(p => p.Id == od_o.Key));
         }
+
+        public Dictionary<int,int> GetTotalFeedbacksByMonths(int customerId, DateTime since, DateTime until)
+        {
+            return _db.Feedbacks
+                .Where(f => f.CustomerId == customerId && f.Date <= until && f.Date >= since)
+                .GroupBy(f => f.Date.Month).ToDictionary(g => g.Key, g => g.Count());
+        }
     }
 }

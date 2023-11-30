@@ -66,7 +66,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 (_unitOfWork.CustomerRepo.GetAgronomistsByMinTastings(customerId,tastingsNumber,since,until));
             return Ok(agronomistDtos);
         }
-        [HttpGet("{customerId:int}/at-least-one-tasting-order/agronomists")]
+        [HttpGet("{customerId:int}/at-least-one-tasting-order-duration/agronomists")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,7 +79,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 (await _unitOfWork.CustomerRepo.GetAgronomistsByAtLeastOneProductTasting(customerId, since, until));
             return Ok(agronomistDtos);
         }
-        [HttpGet("{customerId:int}/agronomist/{agronomistId:int}/common/tastings")]
+        [HttpGet("{customerId:int}/agronomist/{agronomistId:int}/common-duration/tastings")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -91,6 +91,16 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             IEnumerable<TastingDto> tastingDtos = _mapper.Map<IEnumerable<TastingDto>>
                 (_unitOfWork.CustomerRepo.GetCommonTastingsBetweenCustomerAgronomist(customerId, agronomistId, since, until));
             return Ok(tastingDtos);
+        }
+        [HttpGet("{customerId:int}/feedbacks-by-months/totals")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public ActionResult<Dictionary<int, int>> GetTotalFeedbacksByMonths([FromRoute] int customerId, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            return Ok(_unitOfWork.CustomerRepo.GetTotalFeedbacksByMonths(customerId, since, until));
         }
         [HttpGet("{customerId:int}/orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]

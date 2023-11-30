@@ -40,7 +40,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             HarvestDto harvestDto = _mapper.Map<HarvestDto>(HttpContext.Items["harvest"]);
             return Ok(harvestDto);
         }
-        [HttpGet("harvested-different-n-types/agronomists")]
+        [HttpGet("harvested-different-n-types-duration/agronomists")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

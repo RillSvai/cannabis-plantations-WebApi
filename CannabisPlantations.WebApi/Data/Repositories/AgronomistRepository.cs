@@ -54,5 +54,16 @@ namespace CannabisPlantations.WebApi.Data.Repositories
                 .Where(g => g.Count() >= salesNumber)
                 .Select( g => _db.Customers.FirstOrDefault(c => c.Id == g.Key));
         }
+
+        public int GetNumberTastingsWithDifferenCustomers(int agronomistId, int customerNumber, DateTime since, DateTime until)
+        {
+            var tastingGroups = _db.CustomerTastings
+                .GroupBy(ct => ct.TastingId)
+                .ToList();
+            return tastingGroups
+                .Where(g => g.Count() >= customerNumber)
+                .Join(_db.Tastings.Where(t => t.AgronomistId == agronomistId && t.Date >= since && t.Date <= until), g => g.Key, t => t.Id, (g,t) => 1)
+                .Sum();
+        }
     }
 }

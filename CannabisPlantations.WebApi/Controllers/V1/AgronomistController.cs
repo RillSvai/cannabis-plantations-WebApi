@@ -63,6 +63,17 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 .Map<IEnumerable<AgronomistDto>>(_unitOfWork.AgronomistRepo.GetAgronomistCompanions(agronomistId, since, until));
             return Ok(agronomistDtos);
         }
+        [HttpGet("{agronomistId:int}/tasting-different-customers-duration/times")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<int> GetNumberTastingsWithDifferenCustomers([FromRoute] int agronomistId, [FromQuery] int customerNumber, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            int res = _unitOfWork.AgronomistRepo.GetNumberTastingsWithDifferenCustomers(agronomistId, customerNumber, since, until);
+            return Ok(res);
+        }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]

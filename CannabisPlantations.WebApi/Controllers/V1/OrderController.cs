@@ -41,7 +41,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             OrderDto orderDto = _mapper.Map<OrderDto>(HttpContext.Items["order"]);
             return Ok(orderDto);
         }
-        [HttpGet("purchased-n-different-products/customers")]
+        [HttpGet("purchased-n-different-products-duration/customers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
