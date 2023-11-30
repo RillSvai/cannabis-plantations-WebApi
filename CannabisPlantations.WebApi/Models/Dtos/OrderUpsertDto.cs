@@ -6,5 +6,7 @@ namespace CannabisPlantations.WebApi.Models.Dtos
     {
         [Required]
         public DateTime? Date { get; set; }
+        public int[]? ProductIds { get; set; }
+        public int[]? ProductQuantities {  get; set; }
     }
 }

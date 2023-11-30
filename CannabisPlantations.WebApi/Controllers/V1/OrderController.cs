@@ -47,6 +47,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         [TypeFilter(typeof(CustomerExistFilterAttribute))]
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        [TypeFilter(typeof(OrderUpsertFilterAttribute))]
         public async Task<ActionResult<OrderDto>> Create([FromBody] OrderUpsertDto orderDto, [FromQuery] int agronomistId, [FromQuery] int customerId) 
         {
             Order order = new Order()
@@ -56,6 +57,15 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 CustomerId = customerId
             };
             await _unitOfWork.OrderRepo.InsertAsync(order);
+            await _unitOfWork.Save();
+            await _unitOfWork.OrderDetailRepo
+                .InsertRangeAsync(Enumerable.Range(0, orderDto.ProductQuantities?.Length ?? 0)
+                .Select(i => new OrderDetail
+                {
+                    ProductId = orderDto.ProductIds![i],
+                    Quantity = orderDto.ProductQuantities![i],
+                    OrderId = order.Id
+                }));
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new {orderId = order.Id}, _mapper.Map<OrderDto>(order));
         }
@@ -67,6 +77,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(CustomerExistFilterAttribute))]
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
         [TypeFilter(typeof(OrderExistActionFilterAttribute))]
+        [TypeFilter(typeof(OrderUpsertFilterAttribute))]
         public async Task<IActionResult> Update([FromRoute] int orderId, [FromBody] OrderUpsertDto orderDto, [FromQuery] int agronomistId, [FromQuery] int customerId) 
         {
             Order order = new Order() 
@@ -77,6 +88,16 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 CustomerId = customerId
             };   
             _unitOfWork.OrderRepo.Update(order);
+            await _unitOfWork.Save();
+            _unitOfWork.OrderDetailRepo.DeleteRange(_unitOfWork.OrderDetailRepo.GetAll(od => od.OrderId == orderId));
+            await _unitOfWork.OrderDetailRepo
+                .InsertRangeAsync(Enumerable.Range(0, orderDto.ProductQuantities?.Length ?? 0)
+                .Select(i => new OrderDetail
+                {
+                    ProductId = orderDto.ProductIds![i],
+                    Quantity = orderDto.ProductQuantities![i],
+                    OrderId = orderId
+                }));
             await _unitOfWork.Save();
             return NoContent();
         }
