@@ -26,6 +26,26 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             base.DeleteRange(entities);
         }
 
+        public IEnumerable<Agronomist?> GetAgronomistCompanions(int agronomistId, DateTime since, DateTime until)
+        {
+            List<AgronomistBusinessTrips> agronomistBusinessTrips = _db.AgronomistBusinessTrips
+                .Join(_db.BusinessTrips, abt => abt.BusinessTripId, bt => bt.Id, (abt, bt) => new
+                {
+                    AgronomistBusinessTrip = abt,
+                    StartDate = bt.StartDate,
+                    EndDate = bt.EndDate,
+                })
+                .Where(abt_bt => abt_bt.StartDate >= since && abt_bt.EndDate <= until)
+                .Select(abt_bt => abt_bt.AgronomistBusinessTrip).ToList();
+             List<List<int>> agronomistIds = agronomistBusinessTrips
+                .GroupBy(abt => abt.BusinessTripId)
+                .Where(g => g.Count() >= 2 && g.Any(abt => abt.AgronomistId == agronomistId))
+                .Select(g => g.Select(abt => abt.AgronomistId).ToList()).ToList();
+             return agronomistIds.SelectMany(list => list)
+                .Distinct()
+                .Select(i => _db.Agronomists.FirstOrDefault(a => a.Id == i));
+        }
+
         public IEnumerable<Customer?> GetCustomersByMinSales(int agronomistId, int salesNumber, DateTime since, DateTime until)
         {
             return _db.Orders

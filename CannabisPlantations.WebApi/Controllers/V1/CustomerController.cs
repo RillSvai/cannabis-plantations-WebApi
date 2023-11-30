@@ -47,8 +47,23 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(CustomerExistFilterAttribute))]
         public ActionResult<IEnumerable<ProductDto>> GetPurchasedProducts([FromRoute] int customerId, [FromQuery] DateTime since, [FromQuery] DateTime until) 
         {
-            IEnumerable<ProductDto> productDtos = _mapper.Map<IEnumerable<ProductDto>>(_unitOfWork.CustomerRepo.GetPurchasedProducts(customerId, since, until));
+            IEnumerable<ProductDto> productDtos = _mapper
+                .Map<IEnumerable<ProductDto>>
+                (_unitOfWork.CustomerRepo.GetPurchasedProducts(customerId, since, until));
             return Ok(productDtos);
+        }
+        [HttpGet("{customerId:int}/min-tastings-duration/agronomists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public ActionResult<IEnumerable<AgronomistDto>> GetAgronomistsByMinTastings([FromRoute] int customerId, [FromQuery] int tastingsNumber, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<AgronomistDto> agronomistDtos = _mapper
+                .Map<IEnumerable<AgronomistDto>>
+                (_unitOfWork.CustomerRepo.GetAgronomistsByMinTastings(customerId,tastingsNumber,since,until));
+            return Ok(agronomistDtos);
         }
         [HttpGet("{customerId:int}/orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]

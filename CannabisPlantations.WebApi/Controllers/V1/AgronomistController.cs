@@ -51,6 +51,18 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 .Map<IEnumerable<CustomerDto>>(_unitOfWork.AgronomistRepo.GetCustomersByMinSales(agronomistId, salesNumber, since, until));
             return Ok(customerDtos);
         }
+        [HttpGet("{agronomistId:int}/companions-duration/agronomists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<IEnumerable<AgronomistDto>> GetAgronomistCompanions([FromRoute] int agronomistId, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<AgronomistDto> agronomistDtos = _mapper
+                .Map<IEnumerable<AgronomistDto>>(_unitOfWork.AgronomistRepo.GetAgronomistCompanions(agronomistId, since, until));
+            return Ok(agronomistDtos);
+        }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
