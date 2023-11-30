@@ -7,5 +7,6 @@ namespace CannabisPlantations.WebApi.Models.Dtos
         [Required]
         [MinLength(2)]
         public string Name { get; set; } = null!;
+        public int[]? TastingIds {  get; set; }
     }
 }

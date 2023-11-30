@@ -77,7 +77,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             await _unitOfWork.AgronomistRepo.InsertAsync(agronomist);
             await _unitOfWork.Save();
             await _unitOfWork.AgronomistBusinessTripRepo
-                .InsertRangeAsync((agronomistDto.BusinessTripIds ?? new int[0])
+                .InsertRangeAsync((agronomistDto.BusinessTripIds ?? Array.Empty<int>())
                 .Select(i => new AgronomistBusinessTrips { AgronomistId = agronomist.Id, BusinessTripId = i}));
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new {agronomistId = agronomist.Id}, _mapper.Map<AgronomistDto>(agronomist));

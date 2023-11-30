@@ -79,6 +79,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [TypeFilter(typeof(CustomerUpsertFilterAttribute))]
         public async Task<ActionResult<CustomerDto>> Create([FromBody] CustomerUpsertDto customerDto) 
         {
             Customer customer = new Customer() 
@@ -86,6 +87,10 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 Name = customerDto.Name
             };
             await _unitOfWork.CustomerRepo.InsertAsync(customer);
+            await _unitOfWork.Save();
+            await _unitOfWork.CustomerTastingRepo
+                .InsertRangeAsync((customerDto.TastingIds ?? Array.Empty<int>())
+                .Select(i => new CustomerTastings { CustomerId = customer.Id, TastingId = i }));
             await _unitOfWork.Save();
             return CreatedAtAction(nameof(Get), new {customerId = customer.Id}, _mapper.Map<CustomerDto>(customer));
         }
@@ -95,6 +100,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [IdFilter]
         [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        [TypeFilter(typeof(CustomerUpsertFilterAttribute))]
         public async Task<IActionResult> Update([FromRoute] int customerId, [FromBody] CustomerUpsertDto customerDto) 
         {
             Customer customer = new Customer() 
@@ -103,6 +109,11 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 Name = customerDto.Name,
             };
             _unitOfWork.CustomerRepo.Update(customer);
+            await _unitOfWork.Save();
+            _unitOfWork.CustomerTastingRepo.DeleteRange(_unitOfWork.CustomerTastingRepo.GetAll(ct => ct.CustomerId == customerId));
+            await _unitOfWork.CustomerTastingRepo
+                .InsertRangeAsync((customerDto.TastingIds ?? Array.Empty<int>())
+                .Select(i => new CustomerTastings { CustomerId = customerId, TastingId = i }));
             await _unitOfWork.Save();
             return NoContent();
         }
