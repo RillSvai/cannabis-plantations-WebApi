@@ -1,5 +1,6 @@
 ﻿using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
 using CannabisPlantations.WebApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CannabisPlantations.WebApi.Data.Repositories
 {
@@ -25,6 +26,30 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             base.DeleteRange(entities);
         }
 
+        public async Task<IEnumerable<Agronomist?>> GetAgronomistsByAtLeastOneProductTasting(int customerId, DateTime since, DateTime until)
+        {
+            List<int> agronomistsAtLeastOneOrder = await _db.Orders
+                .Where(o => o.CustomerId == customerId && o.Date <= until && o.Date >= since)
+                .Select(o => o.AgronomistId)
+                .Distinct()
+                .ToListAsync();
+            List<int> agronomistsAtLeastOneTasting = await _db.CustomerTastings
+                .Where(ct => ct.CustomerId == customerId)
+                .Join(_db.Tastings, ct => ct.TastingId, t => t.Id, (ct, t) => new
+                {
+                    AgronomistId = t.AgronomistId,
+                    Date = t.Date
+                })
+                .Where(ct_t => ct_t.Date >= since && ct_t.Date <= until)
+                .Select(ct_t => ct_t.AgronomistId)
+                .Distinct()
+                .ToListAsync();
+            return  agronomistsAtLeastOneOrder
+                .Intersect(agronomistsAtLeastOneTasting)
+                .Select(i => _db.Agronomists
+                .FirstOrDefault(a => a.Id == i));
+        }
+
         public IEnumerable<Agronomist?> GetAgronomistsByMinTastings(int customerId, int tastingsNumber, DateTime since, DateTime until)
         {
             return _db.CustomerTastings
@@ -36,6 +61,17 @@ namespace CannabisPlantations.WebApi.Data.Repositories
                 .GroupBy(a => a.AgronomistId)
                 .Where(g => g.Count() >= tastingsNumber)
                 .Select(g => _db.Agronomists.FirstOrDefault(a => a.Id == g.Key));
+                
+        }
+
+        public IEnumerable<Tasting?> GetCommonTastingsBetweenCustomerAgronomist(int customerId, int agronomistId, DateTime since, DateTime until)
+        {
+            return _db.CustomerTastings
+                .Where(ct => ct.CustomerId == customerId)
+                .Join(_db.Tastings
+                .Where(t => t.Date <= until && t.Date >= since && t.AgronomistId == agronomistId), ct => ct.TastingId, t => t.Id, (ct, t) => t.Id)
+                .Select(i => _db.Tastings.FirstOrDefault(t => t.Id == i));
+           
                 
         }
 

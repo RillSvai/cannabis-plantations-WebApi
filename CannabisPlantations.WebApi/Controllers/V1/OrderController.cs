@@ -41,6 +41,17 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             OrderDto orderDto = _mapper.Map<OrderDto>(HttpContext.Items["order"]);
             return Ok(orderDto);
         }
+        [HttpGet("purchased-n-different-products/customers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        public ActionResult<IEnumerable<CustomerDto>> GetCustomersByMinPurchasedDifferentProducts([FromQuery] int productNumber,[FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<CustomerDto> customerDtos = _mapper.Map<IEnumerable<CustomerDto>>
+                (_unitOfWork.OrderRepo.GetCustomersByMinPurchasedDifferentProducts(productNumber, since, until));
+            return Ok(customerDtos);
+        }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]

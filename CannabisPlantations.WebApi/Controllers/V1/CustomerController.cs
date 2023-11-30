@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CannabisPlantations.WebApi.Data.Repositories.IRepositories;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters;
+using CannabisPlantations.WebApi.Filters.V1.ActionFilters.AgronomistActionFilters;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CustomerActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
@@ -64,6 +65,32 @@ namespace CannabisPlantations.WebApi.Controllers.V1
                 .Map<IEnumerable<AgronomistDto>>
                 (_unitOfWork.CustomerRepo.GetAgronomistsByMinTastings(customerId,tastingsNumber,since,until));
             return Ok(agronomistDtos);
+        }
+        [HttpGet("{customerId:int}/at-least-one-tasting-order/agronomists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public async Task<ActionResult<IEnumerable<AgronomistDto>>> GetAgronomistsByAtLeastOneTastingOrder([FromRoute] int customerId, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<AgronomistDto> agronomistDtos = _mapper
+                .Map<IEnumerable<AgronomistDto>>
+                (await _unitOfWork.CustomerRepo.GetAgronomistsByAtLeastOneProductTasting(customerId, since, until));
+            return Ok(agronomistDtos);
+        }
+        [HttpGet("{customerId:int}/agronomist/{agronomistId:int}/common/tastings")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<IEnumerable<TastingDto>> GetCommonTastingsBetweenCustomerAgronomist([FromRoute] int customerId, [FromRoute] int agronomistId, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<TastingDto> tastingDtos = _mapper.Map<IEnumerable<TastingDto>>
+                (_unitOfWork.CustomerRepo.GetCommonTastingsBetweenCustomerAgronomist(customerId, agronomistId, since, until));
+            return Ok(tastingDtos);
         }
         [HttpGet("{customerId:int}/orders")]
         [ProducesResponseType(StatusCodes.Status200OK)]

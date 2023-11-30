@@ -40,6 +40,17 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             HarvestDto harvestDto = _mapper.Map<HarvestDto>(HttpContext.Items["harvest"]);
             return Ok(harvestDto);
         }
+        [HttpGet("harvested-different-n-types/agronomists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        public ActionResult<AgronomistDto> GetAgronomistByDifferentHarvestedTypes([FromQuery] int cannabisTypeNumber, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<AgronomistDto> agronomistDtos = _mapper.Map<IEnumerable<AgronomistDto>>
+                (_unitOfWork.HarvestRepo.GetAgronomistByDifferentHarvestedTypes(cannabisTypeNumber, since, until));
+            return Ok(agronomistDtos);  
+        }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

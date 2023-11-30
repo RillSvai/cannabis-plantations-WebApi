@@ -21,5 +21,20 @@ namespace CannabisPlantations.WebApi.Data.Repositories
             _db.OrderDetails.RemoveRange(orderDetails);
             base.DeleteRange(entities);
         }
+
+        public IEnumerable<Customer?> GetCustomersByMinPurchasedDifferentProducts(int productNumber, DateTime since, DateTime until)
+        {
+            return _db.OrderDetails
+                .Join(_db.Orders, od => od.OrderId, o => o.Id, (od, o) => new
+                {
+                    CustomerId = o.CustomerId,
+                    ProductId = od.ProductId,
+                    Date = o.Date
+                })
+                .Where(od_o => od_o.Date >= since && od_o.Date <= until)
+                .GroupBy(o => o.CustomerId)
+                .Where(g => g.Count() >= productNumber)
+                .Select(g => _db.Customers.FirstOrDefault(c => c.Id == g.Key));
+        }
     }
 }
