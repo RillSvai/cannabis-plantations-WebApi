@@ -27,9 +27,11 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<OrderDto>> GetAll() 
+        public ActionResult<IEnumerable<OrderDto>> GetAll()
         {
-            IEnumerable<OrderDto> orderDtos = _mapper.Map<IEnumerable<OrderDto>>(_unitOfWork.OrderRepo.GetAll());
+            IEnumerable<OrderDto> orderDtos = _mapper
+                .Map<IEnumerable<OrderDto>>
+                (_unitOfWork.OrderRepo.GetAll());
             return Ok(orderDtos);
         }
         [HttpGet("{orderId:int}")]
@@ -38,10 +40,25 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [IdFilter]
         [TypeFilter(typeof(OrderExistActionFilterAttribute))]
-        public ActionResult<OrderDto> Get([FromRoute] int orderId) 
+        public ActionResult<OrderDto> Get([FromRoute] int orderId)
         {
-            OrderDto orderDto = _mapper.Map<OrderDto>(HttpContext.Items["order"]);
+            OrderDto orderDto = _mapper
+                .Map<OrderDto>
+                (HttpContext.Items["order"]);
             return Ok(orderDto);
+        }
+        [HttpGet("{orderId:int}/order-details")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(OrderExistActionFilterAttribute))]
+        public ActionResult<IEnumerable<OrderDetailDto>> GetOrderDetails([FromRoute] int orderId)
+        {
+            IEnumerable<OrderDetailDto> orderDetailDtos = _mapper
+                .Map<IEnumerable<OrderDetailDto>>
+                (_unitOfWork.OrderDetailRepo.GetAll(od => od.OrderId == orderId));
+            return Ok(orderDetailDtos);
         }
         [HttpGet("purchased-n-different-products-duration/customers")]
         [SwaggerOperation(Summary = "6 Query (Description below)", Description = StaticDetails.QueryDescription6)]
@@ -51,7 +68,8 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         public ActionResult<IEnumerable<CustomerDto>> GetCustomersByMinPurchasedDifferentProducts([FromQuery] int productNumber,[FromQuery] DateTime since, [FromQuery] DateTime until) 
         {
-            IEnumerable<CustomerDto> customerDtos = _mapper.Map<IEnumerable<CustomerDto>>
+            IEnumerable<CustomerDto> customerDtos = _mapper
+                .Map<IEnumerable<CustomerDto>>
                 (_unitOfWork.OrderRepo.GetCustomersByMinPurchasedDifferentProducts(productNumber, since, until));
             return Ok(customerDtos);
         }
@@ -63,7 +81,8 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         public ActionResult<IEnumerable<ProductDto>> GetProductsPurchasedDifferentCustomers([FromQuery] int customerNumber, [FromQuery] DateTime since, [FromQuery] DateTime until) 
         {
-            IEnumerable<ProductDto> productDtos = _mapper.Map<IEnumerable<ProductDto>>
+            IEnumerable<ProductDto> productDtos = _mapper
+                .Map<IEnumerable<ProductDto>>
                 (_unitOfWork.OrderRepo.GetProductsPurchasedDifferentCustomers(customerNumber, since, until));
             return Ok(productDtos);
         }

@@ -26,7 +26,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<BusinessTripDto>> GetAll()
         {
-            IEnumerable<BusinessTripDto> businessTrips = _mapper.Map<IEnumerable<BusinessTripDto>>(_unitOfWork.BusinessTripRepo.GetAll());
+            IEnumerable<BusinessTripDto> businessTrips = _mapper
+                .Map<IEnumerable<BusinessTripDto>>
+                (_unitOfWork.BusinessTripRepo.GetAll());
             return Ok(businessTrips);
         }
         [HttpGet("{businessTripId:int}")]
@@ -37,8 +39,23 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(BusinessTripExistFilterAttribute))]
         public ActionResult<BusinessTripDto> Get([FromRoute] int businessTripId)
         {
-            BusinessTripDto businessTripDto = _mapper.Map<BusinessTripDto>(HttpContext.Items["businessTrip"]);
+            BusinessTripDto businessTripDto = _mapper
+                .Map<BusinessTripDto>
+                (HttpContext.Items["businessTrip"]);
             return Ok(businessTripDto);
+        }
+        [HttpGet("{businessTripId:int}/agronomists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(BusinessTripExistFilterAttribute))]
+        public ActionResult<AgronomistDto> GetAgronomists([FromRoute] int businessTripId) 
+        {
+            IEnumerable<AgronomistDto> agronomistDtos = _mapper
+                .Map<IEnumerable<AgronomistDto>>
+                (_unitOfWork.AgronomistBusinessTripRepo.GetAgronomists(businessTripId));
+            return Ok(agronomistDtos);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -36,7 +36,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(ProductStorageExistFilterAttribute))]
         public ActionResult<ProductStorageDto> Get([FromRoute] int productStorageId) 
         {
-            ProductStorageDto productStorageDto = _mapper.Map<ProductStorageDto>(HttpContext.Items["productStorage"]);
+            ProductStorageDto productStorageDto = _mapper
+                .Map<ProductStorageDto>
+                (HttpContext.Items["productStorage"]);
             return Ok(productStorageDto);
         }
         [HttpPost]

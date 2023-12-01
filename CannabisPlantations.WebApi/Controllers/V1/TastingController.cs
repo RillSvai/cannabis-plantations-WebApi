@@ -26,7 +26,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<TastingDto>> GetAll() 
         {
-            IEnumerable<TastingDto> tastingDtos = _mapper.Map<IEnumerable<TastingDto>>(_unitOfWork.TastingRepo.GetAll());
+            IEnumerable<TastingDto> tastingDtos = _mapper
+                .Map<IEnumerable<TastingDto>>
+                (_unitOfWork.TastingRepo.GetAll());
             return Ok(tastingDtos);
         }
         [HttpGet("{tastingId:int}")]
@@ -37,8 +39,23 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(TastingExistFilterAttribute))]
         public ActionResult<TastingDto> Get([FromRoute] int tastingId) 
         {
-            TastingDto tastingDto = _mapper.Map<TastingDto>(HttpContext.Items["tasting"]);
+            TastingDto tastingDto = _mapper
+                .Map<TastingDto>
+                (HttpContext.Items["tasting"]);
             return Ok(tastingDto);
+        }
+        [HttpGet("{tastingId:int}/customers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [IdFilter]
+        [TypeFilter(typeof(TastingExistFilterAttribute))]
+        public ActionResult<IEnumerable<CustomerDto>> GetCustomers([FromRoute] int tastingId) 
+        {
+            IEnumerable<CustomerDto> customerDtos = _mapper
+                .Map<IEnumerable<CustomerDto>>
+                (_unitOfWork.CustomerTastingRepo.GetCustomers(tastingId));
+            return Ok(customerDtos);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]

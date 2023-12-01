@@ -28,7 +28,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<HarvestDto>> GetAll() 
         {
-            IEnumerable<HarvestDto> harvestDtos = _mapper.Map<IEnumerable<HarvestDto>>(_unitOfWork.HarvestRepo.GetAll());
+            IEnumerable<HarvestDto> harvestDtos = _mapper
+                .Map<IEnumerable<HarvestDto>>
+                (_unitOfWork.HarvestRepo.GetAll());
             return Ok(harvestDtos);
         }
         [HttpGet("{harvestId:int}")]
@@ -39,7 +41,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(HarvestExistFilterAttribute))]
         public ActionResult<HarvestDto> Get([FromRoute] int harvestId) 
         {
-            HarvestDto harvestDto = _mapper.Map<HarvestDto>(HttpContext.Items["harvest"]);
+            HarvestDto harvestDto = _mapper
+                .Map<HarvestDto>
+                (HttpContext.Items["harvest"]);
             return Ok(harvestDto);
         }
         [HttpGet("harvested-different-n-types-duration/agronomists")]
@@ -50,7 +54,8 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         public ActionResult<AgronomistDto> GetAgronomistByDifferentHarvestedTypes([FromQuery] int cannabisTypeNumber, [FromQuery] DateTime since, [FromQuery] DateTime until) 
         {
-            IEnumerable<AgronomistDto> agronomistDtos = _mapper.Map<IEnumerable<AgronomistDto>>
+            IEnumerable<AgronomistDto> agronomistDtos = _mapper
+                .Map<IEnumerable<AgronomistDto>>
                 (_unitOfWork.HarvestRepo.GetAgronomistByDifferentHarvestedTypes(cannabisTypeNumber, since, until));
             return Ok(agronomistDtos);  
         }
@@ -62,7 +67,8 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         public ActionResult<CannabisTypeDto> GetCannabisTypesByMinHarvests([FromQuery] int harvestNumber, [FromQuery] DateTime since, [FromQuery] DateTime until) 
         {
-            IEnumerable<CannabisTypeDto> cannabisTypeDtos = _mapper.Map<IEnumerable<CannabisTypeDto>>
+            IEnumerable<CannabisTypeDto> cannabisTypeDtos = _mapper
+                .Map<IEnumerable<CannabisTypeDto>>
                 (_unitOfWork.HarvestRepo.GetCannabisTypesByMinHarvests(harvestNumber, since, until));
             return Ok(cannabisTypeDtos);
         }

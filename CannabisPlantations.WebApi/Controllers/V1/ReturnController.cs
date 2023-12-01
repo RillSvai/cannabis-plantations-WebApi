@@ -28,7 +28,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ReturnDto>> GetAll()
         {
-            IEnumerable<ReturnDto> returnDtos = _mapper.Map<IEnumerable<ReturnDto>>(_unitOfWork.ReturnRepo.GetAll());
+            IEnumerable<ReturnDto> returnDtos = _mapper
+                .Map<IEnumerable<ReturnDto>>
+                (_unitOfWork.ReturnRepo.GetAll());
             return Ok(returnDtos);
         }
         [HttpGet("{returnId}")]
@@ -39,8 +41,23 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(ReturnExistFilterAttribute))]
         public ActionResult<ReturnDto> Get([FromRoute] int returnId)
         {
-            ReturnDto returnDto = _mapper.Map<ReturnDto>(HttpContext.Items["return"]);
+            ReturnDto returnDto = _mapper
+                .Map<ReturnDto>
+                (HttpContext.Items["return"]);
             return Ok(returnDto);
+        }
+        [HttpGet("{returnId}/return-details")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(ReturnExistFilterAttribute))]
+        public ActionResult<ReturnDetailDto> GetReturnDetails([FromRoute] int returnId) 
+        {
+            IEnumerable<ReturnDetailDto> returnDetailDtos = _mapper
+                .Map<IEnumerable<ReturnDetailDto>>
+                (_unitOfWork.ReturnDetailRepo.GetAll(rd => rd.ReturnId == returnId));
+            return Ok(returnDetailDtos);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]

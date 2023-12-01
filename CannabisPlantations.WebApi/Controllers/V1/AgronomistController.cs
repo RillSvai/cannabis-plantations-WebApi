@@ -27,7 +27,8 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<AgronomistDto>> GetAll() 
         {
-            IEnumerable<AgronomistDto> agronomistDtos = _mapper.Map<IEnumerable<AgronomistDto>>(_unitOfWork.AgronomistRepo.GetAll());
+            IEnumerable<AgronomistDto> agronomistDtos = _mapper
+                .Map<IEnumerable<AgronomistDto>>(_unitOfWork.AgronomistRepo.GetAll());
             return Ok(agronomistDtos);
         }
         [HttpGet("{agronomistId:int}")]
@@ -38,9 +39,83 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
         public ActionResult<AgronomistDto> Get([FromRoute] int agronomistId) 
         {
-            AgronomistDto agronomistDto = _mapper.Map<AgronomistDto>(HttpContext.Items["agronomist"]);
+            AgronomistDto agronomistDto = _mapper
+                .Map<AgronomistDto>(HttpContext.Items["agronomist"]);
             return Ok(agronomistDto);
         }
+        [HttpGet("{agronomistId:int}/harvests")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<HarvestDto> GetHarvests([FromRoute] int agronomistId) 
+        {
+            IEnumerable<HarvestDto> harvestDtos = _mapper
+                .Map<IEnumerable<HarvestDto>>(_unitOfWork.HarvestRepo.GetAll(h => h.AgronomistId == agronomistId));
+            return Ok(harvestDtos);
+        }
+        [HttpGet("{agronomistId:int}/orders")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<IEnumerable<OrderDto>> GetOrders([FromRoute] int agronomistId) 
+        {
+            IEnumerable<OrderDto> orderDtos = _mapper
+                .Map<IEnumerable<OrderDto>>(_unitOfWork.OrderRepo.GetAll(o => o.AgronomistId == agronomistId));
+            return Ok(orderDtos);
+        }
+        [HttpGet("{agronomistId:int}/products")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<IEnumerable<ProductDto>> GetProducts([FromRoute] int agronomistId) 
+        {
+            IEnumerable<ProductDto> productDtos = _mapper
+                .Map<IEnumerable<ProductDto>>(_unitOfWork.ProductRepo.GetAll(p => p.AgronomistId == agronomistId));
+            return Ok(productDtos);
+        }
+        [HttpGet("{agronomistId:int}/returns")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<IEnumerable<ReturnDto>> GetReturns([FromRoute] int agronomistId) 
+        {
+            IEnumerable<ReturnDto> returnDtos = _mapper
+                .Map<IEnumerable<ReturnDto>>(_unitOfWork.ReturnRepo.GetAll(r => r.AgronomistId == agronomistId));
+            return Ok(returnDtos);
+        }
+        [HttpGet("{agronomistId:int}/tastings")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<IEnumerable<TastingDto>> GetTastings([FromRoute] int agronomistId) 
+        {
+            IEnumerable<TastingDto> tastingDtos = _mapper
+                .Map<IEnumerable<TastingDto>>(_unitOfWork.TastingRepo.GetAll(t => t.AgronomistId == agronomistId));
+            return Ok(tastingDtos);
+        }
+        [HttpGet("{agronomistId:int}/business-trips")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+        public ActionResult<IEnumerable<BusinessTripDto>> GetBusinessTrips([FromRoute] int agronomistId) 
+        {
+            IEnumerable<BusinessTripDto> businessTripDtos = _mapper
+                .Map<IEnumerable<BusinessTripDto>>(_unitOfWork.AgronomistBusinessTripRepo.GetBusinessTrips(agronomistId));
+            return Ok(businessTripDtos);
+        }
+        /////
         [HttpGet("{agronomistId:int}/min-sales-duration/customers")]
         [SwaggerOperation(Summary = "1 Query (Description below)", Description = StaticDetails.QueryDescription1)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -83,6 +158,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [TypeFilter(typeof(AgronomistUpsertFilterAttribute))]
+        /////
         public async Task<ActionResult<AgronomistDto>> Create([FromBody] AgronomistUpsertDto agronomistDto)
         {
             Agronomist agronomist = new Agronomist() 

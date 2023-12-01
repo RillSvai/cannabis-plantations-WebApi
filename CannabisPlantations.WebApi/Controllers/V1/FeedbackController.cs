@@ -26,7 +26,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<FeedbackDto>> GetAll() 
         {
-            IEnumerable<FeedbackDto> feedbackDtos = _mapper.Map<IEnumerable<FeedbackDto>>(_unitOfWork.FeedbackRepo.GetAll());
+            IEnumerable<FeedbackDto> feedbackDtos = _mapper
+                .Map<IEnumerable<FeedbackDto>>
+                (_unitOfWork.FeedbackRepo.GetAll());
             return Ok(feedbackDtos);
         }
         [HttpGet("{feedbackId:int}")]
@@ -37,7 +39,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(FeedbackExistFilterAttribute))]
         public ActionResult<FeedbackDto> Get([FromRoute] int feedbackId) 
         {
-            FeedbackDto feedbackDto = _mapper.Map<FeedbackDto>(HttpContext.Items["feedback"]);
+            FeedbackDto feedbackDto = _mapper
+                .Map<FeedbackDto>
+                (HttpContext.Items["feedback"]);
             return Ok(feedbackDto);
         }
         [HttpPost]

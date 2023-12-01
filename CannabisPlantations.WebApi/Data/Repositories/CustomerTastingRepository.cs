@@ -10,5 +10,19 @@ namespace CannabisPlantations.WebApi.Data.Repositories
         {
             _db = db;
         }
+
+        public IEnumerable<Customer?> GetCustomers(int tastingId)
+        {
+            return _db.CustomerTastings
+                .Where(ct => ct.TastingId == tastingId)
+                .Select(ct => _db.Customers.FirstOrDefault(c => c.Id == ct.CustomerId));
+        }
+
+        public IEnumerable<Tasting?> GetTastings(int customerId)
+        {
+            return _db.CustomerTastings
+                .Where(ct => ct.CustomerId == customerId)
+                .Select(ct => _db.Tastings.FirstOrDefault(t => t.Id == ct.TastingId));
+        }
     }
 }

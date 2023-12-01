@@ -27,7 +27,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ProductDto>> GetAll() 
         {
-            IEnumerable<ProductDto> productDtos = _mapper.Map<IEnumerable<ProductDto>>(_unitOfWork.ProductRepo.GetAll());
+            IEnumerable<ProductDto> productDtos = _mapper
+                .Map<IEnumerable<ProductDto>>
+                (_unitOfWork.ProductRepo.GetAll());
             return Ok(productDtos);
         }
         [HttpGet("{productId:int}")]
@@ -38,8 +40,23 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(ProductExistFilterAttribute))]
         public ActionResult<ProductDto> Get([FromRoute] int productId) 
         {           
-            ProductDto productDto = _mapper.Map<ProductDto>(HttpContext.Items["product"]);
+            ProductDto productDto = _mapper
+                .Map<ProductDto>
+                (HttpContext.Items["product"]);
             return Ok(productDto);
+        }
+        [HttpGet("{productId:int}/tastings")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(ProductExistFilterAttribute))]
+        public ActionResult<IEnumerable<TastingDto>> GetTastings([FromRoute] int productId)
+        {
+            IEnumerable<TastingDto> tastingDtos = _mapper
+                .Map<IEnumerable<TastingDto>>
+                (_unitOfWork.TastingRepo.GetAll(t => t.ProductId == productId));
+            return Ok(tastingDtos);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -47,6 +64,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [IdFilter]
         [TypeFilter(typeof(CannabisTypeExistFilterAttribute))]
         [TypeFilter(typeof(AgronomistExistFilterAttribute))]
+
         public async Task<ActionResult<ProductDto>> Create([FromBody] ProductUpsertDto productDto, [FromQuery] int cannabisTypeId, [FromQuery] int agronomistId) 
         {
             Product product = new Product

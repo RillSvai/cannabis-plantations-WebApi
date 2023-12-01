@@ -28,7 +28,9 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<CustomerDto>> GetAll() 
         {
-            IEnumerable<CustomerDto> customers = _mapper.Map<IEnumerable<CustomerDto>>(_unitOfWork.CustomerRepo.GetAll());
+            IEnumerable<CustomerDto> customers = _mapper
+                .Map<IEnumerable<CustomerDto>>
+                (_unitOfWork.CustomerRepo.GetAll());
             return Ok(customers);
         }
         [HttpGet("{customerId:int}")]
@@ -39,8 +41,59 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         [TypeFilter(typeof(CustomerExistFilterAttribute))]
         public ActionResult<CustomerDto> Get([FromRoute] int customerId) 
         {
-            CustomerDto customerDto = _mapper.Map<CustomerDto>(HttpContext.Items["customer"]);
+            CustomerDto customerDto = _mapper
+                .Map<CustomerDto>
+                (HttpContext.Items["customer"]);
             return Ok(customerDto);
+        }
+        [HttpGet("{customerId:int}/orders")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public ActionResult<IEnumerable<OrderDto>> GetOrders([FromRoute] int customerId)
+        {
+            IEnumerable<OrderDto> orders = _mapper
+                .Map<IEnumerable<OrderDto>>
+                (_unitOfWork.OrderRepo.GetAll(o => o.CustomerId == customerId));
+            return Ok(orders);
+        }
+        [HttpGet("{customerId:int}/feedbacks")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public ActionResult<IEnumerable<FeedbackDto>> GetFeedbacks([FromRoute] int customerId) 
+        {
+            IEnumerable<FeedbackDto> feedbackDtos = _mapper.Map<IEnumerable<FeedbackDto>>
+                (_unitOfWork.FeedbackRepo.GetAll(f => f.CustomerId == customerId));
+            return Ok(feedbackDtos);
+        }
+        [HttpGet("{customerId:int}/returns")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public ActionResult<IEnumerable<ReturnDto>> GetReturns([FromRoute] int customerId) 
+        {
+            IEnumerable<ReturnDto> returnDtos = _mapper.Map<IEnumerable<ReturnDto>>
+                (_unitOfWork.ReturnRepo.GetAll(r => r.CustomerId == customerId));
+            return Ok(returnDtos);
+        }
+        [HttpGet("{customerId:int}/tastings")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        [TypeFilter(typeof(CustomerExistFilterAttribute))]
+        public ActionResult<IEnumerable<TastingDto>> GetTastings(int customerId) 
+        {
+            IEnumerable<TastingDto> tastingDtos = _mapper.Map<IEnumerable<TastingDto>>
+                (_unitOfWork.CustomerTastingRepo.GetTastings(customerId));
+            return Ok(tastingDtos);
         }
         [HttpGet("{customerId:int}/purchased-duration/products")]
         [SwaggerOperation(Summary = "2 Query (Description below)", Description = StaticDetails.QueryDescription2)]
@@ -108,17 +161,6 @@ namespace CannabisPlantations.WebApi.Controllers.V1
         public ActionResult<Dictionary<int, int>> GetTotalFeedbacksByMonths([FromRoute] int customerId, [FromQuery] DateTime since, [FromQuery] DateTime until) 
         {
             return Ok(_unitOfWork.CustomerRepo.GetTotalFeedbacksByMonths(customerId, since, until));
-        }
-        [HttpGet("{customerId:int}/orders")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [IdFilter]
-        [TypeFilter(typeof(CustomerExistFilterAttribute))]
-        public ActionResult<IEnumerable<OrderDto>> GetOrders(int customerId)
-        {
-            IEnumerable<OrderDto> orders = _mapper.Map<IEnumerable<OrderDto>>(_unitOfWork.OrderRepo.GetAll(o => o.CustomerId == customerId));
-            return Ok(orders);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
