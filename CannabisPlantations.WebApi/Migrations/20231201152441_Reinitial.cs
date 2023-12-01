@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CannabisPlantations.WebApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Reinitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,24 +17,12 @@ namespace CannabisPlantations.WebApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Agronomists", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Applications",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Applications", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,38 +63,6 @@ namespace CannabisPlantations.WebApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Scopes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Scopes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ApplicationCredentials",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Secret = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ApplicationId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApplicationCredentials", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ApplicationCredentials_Applications_ApplicationId",
-                        column: x => x.ApplicationId,
-                        principalTable: "Applications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -266,32 +222,6 @@ namespace CannabisPlantations.WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ApplicationCredentialScopes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ApplicationCredentialId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ScopeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApplicationCredentialScopes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ApplicationCredentialScopes_ApplicationCredentials_ApplicationCredentialId",
-                        column: x => x.ApplicationCredentialId,
-                        principalTable: "ApplicationCredentials",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApplicationCredentialScopes_Scopes_ScopeId",
-                        column: x => x.ScopeId,
-                        principalTable: "Scopes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProductStorage",
                 columns: table => new
                 {
@@ -426,21 +356,6 @@ namespace CannabisPlantations.WebApi.Migrations
                 column: "BusinessTripId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApplicationCredentials_ApplicationId",
-                table: "ApplicationCredentials",
-                column: "ApplicationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApplicationCredentialScopes_ApplicationCredentialId",
-                table: "ApplicationCredentialScopes",
-                column: "ApplicationCredentialId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApplicationCredentialScopes_ScopeId",
-                table: "ApplicationCredentialScopes",
-                column: "ScopeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CustomerTastings_CustomerId",
                 table: "CustomerTastings",
                 column: "CustomerId");
@@ -539,9 +454,6 @@ namespace CannabisPlantations.WebApi.Migrations
                 name: "AgronomistBusinessTrips");
 
             migrationBuilder.DropTable(
-                name: "ApplicationCredentialScopes");
-
-            migrationBuilder.DropTable(
                 name: "CustomerTastings");
 
             migrationBuilder.DropTable(
@@ -563,12 +475,6 @@ namespace CannabisPlantations.WebApi.Migrations
                 name: "BusinessTrips");
 
             migrationBuilder.DropTable(
-                name: "ApplicationCredentials");
-
-            migrationBuilder.DropTable(
-                name: "Scopes");
-
-            migrationBuilder.DropTable(
                 name: "Tastings");
 
             migrationBuilder.DropTable(
@@ -576,9 +482,6 @@ namespace CannabisPlantations.WebApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Returns");
-
-            migrationBuilder.DropTable(
-                name: "Applications");
 
             migrationBuilder.DropTable(
                 name: "Products");

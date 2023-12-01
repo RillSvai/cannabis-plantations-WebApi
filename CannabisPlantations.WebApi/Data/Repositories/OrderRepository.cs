@@ -36,5 +36,23 @@ namespace CannabisPlantations.WebApi.Data.Repositories
                 .Where(g => g.Count() >= productNumber)
                 .Select(g => _db.Customers.FirstOrDefault(c => c.Id == g.Key));
         }
+
+        public IEnumerable<Product?> GetProductsPurchasedDifferentCustomers(int customerNumber, DateTime since, DateTime until)
+        {
+            return _db.Orders
+                .Where(o => o.Date >= since && o.Date <= until)
+                .Join(_db.OrderDetails, o => o.Id, od => od.OrderId, (o, od) => new
+                {
+                    ProductId = od.ProductId,
+                    CustomerId = o.CustomerId,
+
+                })
+                .GroupBy(od_o => od_o.ProductId)
+                .Where(g => g.Select(g => g.CustomerId).Distinct().Count() >= customerNumber)
+                .OrderByDescending(g => _db.ReturnDetails.Count(rd => rd.ProductId == g.Key 
+                && _db.Returns.FirstOrDefault(r => r.Id == rd.ReturnId)!.Date <= until 
+                && _db.Returns.FirstOrDefault(r => r.Id == rd.ReturnId)!.Date >= since) / g.Count())
+                .Select(g => _db.Products.FirstOrDefault(p => p.Id == g.Key));
+        }
     }
 }

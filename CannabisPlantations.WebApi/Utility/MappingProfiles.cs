@@ -27,6 +27,8 @@ namespace CannabisPlantations.WebApi.Utility
             CreateMap<Return, ReturnDto>();
 
             CreateMap<ProductStorage, ProductStorageDto>();
+
+            CreateMap<CannabisType, CannabisTypeDto>();
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CannabisPlantations.WebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231128203016_DeletedTablesForAuthority")]
-    partial class DeletedTablesForAuthority
+    [Migration("20231201152441_Reinitial")]
+    partial class Reinitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -7,6 +7,7 @@ using CannabisPlantations.WebApi.Filters.V1.ActionFilters.HarvestActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CannabisPlantations.WebApi.Controllers.V1
 {
@@ -50,6 +51,17 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             IEnumerable<AgronomistDto> agronomistDtos = _mapper.Map<IEnumerable<AgronomistDto>>
                 (_unitOfWork.HarvestRepo.GetAgronomistByDifferentHarvestedTypes(cannabisTypeNumber, since, until));
             return Ok(agronomistDtos);  
+        }
+        [HttpGet("harvested-at-least-n-times-duration/cannabistypes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [IdFilter]
+        public ActionResult<CannabisTypeDto> GetCannabisTypesByMinHarvests([FromQuery] int harvestNumber, [FromQuery] DateTime since, [FromQuery] DateTime until) 
+        {
+            IEnumerable<CannabisTypeDto> cannabisTypeDtos = _mapper.Map<IEnumerable<CannabisTypeDto>>
+                (_unitOfWork.HarvestRepo.GetCannabisTypesByMinHarvests(harvestNumber, since, until));
+            return Ok(cannabisTypeDtos);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]

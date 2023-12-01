@@ -24,5 +24,15 @@ namespace CannabisPlantations.WebApi.Data.Repositories
                 .Where(g => g.Count() >= cannabisTypeNumber)
                 .Select(g => _db.Agronomists.FirstOrDefault(a => a.Id == g.Key));
         }
+
+        public IEnumerable<CannabisType?> GetCannabisTypesByMinHarvests(int harvestNumber, DateTime since, DateTime until)
+        {
+            return _db.Harvests
+                .Where(h => h.Date >= since && h.Date <= until)
+                .GroupBy(h => h.CannabisTypeId)
+                .Where(g => g.Count() >= harvestNumber)
+                .OrderByDescending(g => g.Count())
+                .Select(g => _db.CannabisTypes.FirstOrDefault(ct => ct.Id == g.Key));
+        }
     }
 }
