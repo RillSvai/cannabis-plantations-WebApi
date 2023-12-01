@@ -43,6 +43,7 @@ namespace CannabisPlantations.WebApi.Data.Repositories
                 .Select(g => g.Select(abt => abt.AgronomistId).ToList()).ToList();
              return agronomistIds.SelectMany(list => list)
                 .Distinct()
+                .Where(i => i != agronomistId)
                 .Select(i => _db.Agronomists.FirstOrDefault(a => a.Id == i));
         }
 
