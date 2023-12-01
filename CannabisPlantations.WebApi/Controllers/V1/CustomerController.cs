@@ -5,7 +5,9 @@ using CannabisPlantations.WebApi.Filters.V1.ActionFilters.AgronomistActionFilter
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CustomerActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
+using CannabisPlantations.WebApi.Utility;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Collections;
 
 namespace CannabisPlantations.WebApi.Controllers.V1
@@ -41,6 +43,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(customerDto);
         }
         [HttpGet("{customerId:int}/purchased-duration/products")]
+        [SwaggerOperation(Summary = "2 Query (Description below)", Description = StaticDetails.QueryDescription2)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -54,6 +57,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(productDtos);
         }
         [HttpGet("{customerId:int}/min-tastings-duration/agronomists")]
+        [SwaggerOperation(Summary = "3 Query (Description below)", Description = StaticDetails.QueryDescription3)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -67,6 +71,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(agronomistDtos);
         }
         [HttpGet("{customerId:int}/at-least-one-tasting-order-duration/agronomists")]
+        [SwaggerOperation(Summary = "5 Query (Description below)", Description = StaticDetails.QueryDescription5)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,6 +85,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(agronomistDtos);
         }
         [HttpGet("{customerId:int}/agronomist/{agronomistId:int}/common-duration/tastings")]
+        [SwaggerOperation(Summary = "8 Query (Description below)", Description = StaticDetails.QueryDescription8)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,6 +99,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(tastingDtos);
         }
         [HttpGet("{customerId:int}/feedbacks-by-months/totals")]
+        [SwaggerOperation(Summary = "10 Query (Description below)", Description = StaticDetails.QueryDescription10)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

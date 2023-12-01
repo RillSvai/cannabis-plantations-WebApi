@@ -22,6 +22,7 @@ builder.Services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'
 builder.Services.AddSwaggerGen(options => 
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Finlandia", Version = "40%", Description = StaticDetails.SwaggerDescription });
+    options.EnableAnnotations();
 });
 
 

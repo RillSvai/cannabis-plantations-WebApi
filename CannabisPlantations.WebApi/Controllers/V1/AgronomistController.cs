@@ -4,8 +4,10 @@ using CannabisPlantations.WebApi.Filters.V1.ActionFilters;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.AgronomistActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
+using CannabisPlantations.WebApi.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CannabisPlantations.WebApi.Controllers.V1
 {
@@ -40,6 +42,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(agronomistDto);
         }
         [HttpGet("{agronomistId:int}/min-sales-duration/customers")]
+        [SwaggerOperation(Summary = "1 Query (Description below)", Description = StaticDetails.QueryDescription1)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -52,6 +55,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(customerDtos);
         }
         [HttpGet("{agronomistId:int}/companions-duration/agronomists")]
+        [SwaggerOperation(Summary = "4 Query (Description below)", Description = StaticDetails.QueryDescription4)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -64,6 +68,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(agronomistDtos);
         }
         [HttpGet("{agronomistId:int}/tasting-different-customers-duration/times")]
+        [SwaggerOperation(Summary = "9 Query (Description below)", Description = StaticDetails.QueryDescription9)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

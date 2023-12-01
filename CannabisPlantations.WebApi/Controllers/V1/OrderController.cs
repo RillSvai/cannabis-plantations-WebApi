@@ -7,7 +7,9 @@ using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CustomerActionFilters;
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.OrderActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
+using CannabisPlantations.WebApi.Utility;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CannabisPlantations.WebApi.Controllers.V1
 {
@@ -42,6 +44,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(orderDto);
         }
         [HttpGet("purchased-n-different-products-duration/customers")]
+        [SwaggerOperation(Summary = "6 Query (Description below)", Description = StaticDetails.QueryDescription6)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -53,6 +56,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(customerDtos);
         }
         [HttpGet("purchased-n-customers-duration/products")]
+        [SwaggerOperation(Summary = "12 Query (Description below)", Description = StaticDetails.QueryDescription12)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -6,6 +6,7 @@ using CannabisPlantations.WebApi.Filters.V1.ActionFilters.CannabisTypeActionFilt
 using CannabisPlantations.WebApi.Filters.V1.ActionFilters.HarvestActionFilters;
 using CannabisPlantations.WebApi.Models;
 using CannabisPlantations.WebApi.Models.Dtos;
+using CannabisPlantations.WebApi.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -42,6 +43,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(harvestDto);
         }
         [HttpGet("harvested-different-n-types-duration/agronomists")]
+        [SwaggerOperation(Summary = "7 Query (Description below)", Description = StaticDetails.QueryDescription7)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -53,6 +55,7 @@ namespace CannabisPlantations.WebApi.Controllers.V1
             return Ok(agronomistDtos);  
         }
         [HttpGet("harvested-at-least-n-times-duration/cannabistypes")]
+        [SwaggerOperation(Summary = "11 Query (Description below)", Description = StaticDetails.QueryDescription11)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
